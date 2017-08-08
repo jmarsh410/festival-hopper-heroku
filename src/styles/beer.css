@@ -1,0 +1,85 @@
+.beers {
+  margin-bottom: 100px;
+}
+/*.beer.checkedIn {
+  opacity: .5;
+}*/
+.beer {
+  background-color: var(--gray);
+}
+.beer-main {
+  display: block;
+  padding: 20px;
+  background-color: #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+}
+.beer-image {
+  width: 50px;
+  height: 50px;
+  background-color: #ccc;
+}
+.beer-image img {
+  width: 100%;
+}
+.beer-info {
+  flex: 1;
+  margin: 0 10px;
+}
+.beer-actions {
+  display: flex;
+  align-items: center;
+}
+.beer-actions > * {
+  margin-left: 10px;
+}
+/*move this into a separate module*/
+.beer-checkbox {
+  max-height: 25px;
+}
+.checkedIn .beer-checkbox .checkbox-vis {
+  background-color: transparent;
+}
+.checkedIn .beer-checkbox .checkbox-input:checked + .checkbox-vis:before {
+  border-width: 4px;
+  border-radius: 50%;
+  width: 12px;
+  border-color: var(--light-green);
+  transform: translateY(0px);
+}
+.beer-drawer {
+  overflow:hidden;
+  max-height: 0px;
+  box-sizing: border-box;
+  transition: .3s max-height linear;
+}
+.beer.open .beer-drawer {
+  max-height: 300px;
+}
+.beer-drawerInner {
+  padding: 20px;
+}
+.beer-description {
+  width: 100%;
+  max-width: 100%;
+  min-height: 50px;
+  max-height: 100px;
+  margin-bottom: 10px;
+}
+.beer-rating {
+  display: flex;
+}
+.beer-slider {
+  flex: 1;
+}
+.beer-sliderValue {
+  padding: 10px;
+  background-color: #eee;
+  margin-left: 10px;
+  min-width: 55px;
+  text-align: center;
+  box-sizing: border-box;
+}

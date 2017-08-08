@@ -1,0 +1,22 @@
+.list-title {
+  font-family: var(--title-font-family);
+  text-align: center;
+}
+.list-main {
+  /*background-color: #eee;*/
+  margin: 0;
+  padding: 0;
+}
+.list-item {
+  background-color: transparent;
+  list-style: none;
+  margin: 0 0 0px;
+  padding: 0;
+  border-bottom: 1px solid var(--gray);
+}
+.list-item:last-child {
+  border-bottom: none;
+}
+.list-item:last-child > * {
+  margin-bottom: 0;
+}

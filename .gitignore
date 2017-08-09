@@ -11,6 +11,9 @@
 /dist-client
 /dist-server
 
+#compiled code
+index-compiled.js
+
 # misc
 .DS_Store
 .env

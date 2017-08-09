@@ -18,8 +18,7 @@ app.use(express.static('dist-client/static'));
 // set the template engine to use nunjucks
 app.set('views', './views');
 nunjucks.configure('views', {
-  express: app,
-  autoescape: true
+  express: app
 });
 app.set('view engine', 'nunjucks');
 

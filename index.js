@@ -17,7 +17,6 @@ app.use(express.static('dist-client/static'));
 app.set('views', './views');
 nunjucks.configure('views', {
   express: app,
-  autoescape: true
 });
 app.set('view engine', 'nunjucks');
 

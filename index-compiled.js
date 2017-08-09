@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var app = express();
 var React = require('react');
@@ -21,22 +23,22 @@ nunjucks.configure('views', {
 });
 app.set('view engine', 'nunjucks');
 
-function renderApp(req, res){
+function renderApp(req, res) {
   var context = {};
   // get the contents of the index.html file
-  var html = ReactDomServer.renderToString(
-    <StaticRouter
-      location = {req.url}
-      context = {context}
-    >
-      <App/>
-    </StaticRouter>
-  );
+  var html = ReactDomServer.renderToString(React.createElement(
+    StaticRouter,
+    {
+      location: req.url,
+      context: context
+    },
+    React.createElement(App, null)
+  ));
   // render the App for the appropriate url path
   if (context.url) {
     res.writeHead(301, {
       Location: context.url
-    })
+    });
     res.end();
   } else {
     res.render('index.nunj', { title: 'Festival Hopper', content: html });
@@ -45,6 +47,6 @@ function renderApp(req, res){
 
 app.get('/*', renderApp);
 
-app.listen(process.env.PORT || 5000, function(){
+app.listen(process.env.PORT || 5000, function () {
   console.log('express app is listening on port ' + process.env.PORT || 5000);
 });

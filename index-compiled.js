@@ -14,7 +14,7 @@ var nunjucks = require('nunjucks');
 var App = require('./dist-server/bundle.js').App.default;
 
 // serve static files from the static folder 
-app.use(express.static(path.resolve(__dirname, 'dist-client/static')));
+app.use(express.static(__dirname + '/dist-client/static'));
 
 // set the template engine to use nunjucks
 app.set('views', './views');

@@ -594,13 +594,17 @@ var App = function (_Component) {
     value: function authenticate() {
       // check if the user's auth token can be found in local storage or a query string
       // be aware that this method won't work if there is any other information in the url after the access_token. though if access_token exists, it would always be alone since this would be right after authenticating
-      if (localStorage && localStorage.getItem('userToken')) {
-        return true;
-      } else {
-        var queryToken = window.location.href.indexOf(urlParameter) > -1 ? window.location.href.split(urlParameter).pop() : null;
-        if (queryToken) {
-          localStorage.setItem('userToken', queryToken);
+      console.log();
+      if (typeof localStorage !== 'undefined') {
+        // localstorage won't exist on the server
+        if (localStorage.getItem('userToken')) {
           return true;
+        } else {
+          var queryToken = window.location.href.indexOf(urlParameter) > -1 ? window.location.href.split(urlParameter).pop() : null;
+          if (queryToken) {
+            localStorage.setItem('userToken', queryToken);
+            return true;
+          }
         }
       }
       return false;
@@ -626,7 +630,9 @@ var App = function (_Component) {
             } }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '/logout', render: function render() {
               // delete the user token from local storage
-              localStorage.clear();
+              if (typeof localStorage !== 'undefined') {
+                localStorage.clear();
+              }
               return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
             } }),
           _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/curated', component: _categories2.default }),

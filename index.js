@@ -3,6 +3,7 @@ var app = express();
 var React = require('react');
 var ReactDomServer = require('react-dom/server');
 var StaticRouter = require('react-router').StaticRouter;
+var nunjucks = require('nunjucks');
 
 // use babel to create a node-readable version of all files used in App.js
 // by converting it to es5 and removing requires to css files
@@ -10,13 +11,19 @@ var StaticRouter = require('react-router').StaticRouter;
 var App = require('./dist-server/bundle.js').App.default;
 
 // serve static files from the static folder 
+app.use(express.static('dist-client/static'));
+
+// set the template engine to use nunjucks
+app.set('views', './views');
+nunjucks.configure('views', {
+    express: app,
+    autoescape: true
+});
+app.set('view engine', 'nunjucks');
 
 function renderApp(req, res){
   var context = {};
   // get the contents of the index.html file
-  // console.log(typeof App);
-  // console.log(App);
-  // console.log(ReactDomServer.renderToString(React.createElement(App)));
   var html = ReactDomServer.renderToString(
     <StaticRouter
       location = {req.url}
@@ -32,16 +39,7 @@ function renderApp(req, res){
     })
     res.end();
   } else {
-    res.write(`
-      <!doctype html>
-      <html>
-      <head></head>
-      <body>
-      <div id="root">${html}</div>
-      </body>
-      </html>
-    `)
-    res.end()
+    res.render('index.nunj', { title: 'Festival Hopper', content: html });
   }
 }
 

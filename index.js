@@ -15,10 +15,7 @@ app.use(express.static('dist-client/static'));
 
 // set the template engine to use nunjucks
 app.set('views', './views');
-nunjucks.configure('views', {
-  express: app,
-  autoescape: false
-});
+nunjucks.configure('views', {express: app,autoescape: false});
 app.set('view engine', 'nunjucks');
 
 function renderApp(req, res){

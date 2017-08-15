@@ -27,9 +27,9 @@ const urlParameter = '#access_token=';
 class App extends Component {
   authenticate() {
     // check if the user's auth token can be found in local storage or a query string
-    // be aware that this method won't work if there is any other information in the url after the access_token. though if access_token exists, it would always be alone since this would be right after authenticating
-    console.log();
+    // be aware that this method won't work if there is any other information in the url after the access_token. though if access_token exists, it would always be alone since this would be right after authenticating    
     if (typeof localStorage !== 'undefined') { // localstorage won't exist on the server
+      console.log('the authenticate is running on the client side once the scripts load');
       if (localStorage.getItem('userToken')) {
         return true;
       } else {
@@ -40,6 +40,11 @@ class App extends Component {
         }
       }
     }
+    // if on the server and logged in, then return true
+    if (typeof localStorage === 'undefined' && this.props.userIsLoggedIn) {
+      return true;
+    }
+    console.log('authenticate returns false');
     return false;
   }
   render() {

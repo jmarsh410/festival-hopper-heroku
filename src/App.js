@@ -44,7 +44,6 @@ class App extends Component {
     if (typeof localStorage === 'undefined' && this.props.userIsLoggedIn) {
       return true;
     }
-    console.log('authenticate returns false');
     return false;
   }
   render() {

@@ -569,9 +569,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* jshint ignore:start */
 
 var urlParameter = '#access_token=';
-// const client_id = 'B37286DA6E41C3C75634F4C0DB726E889052525C';
-// const client_secret = '8E445ABC27BC99A5D67CBB98AEAA2E936E02AE28';
-// const myToken = '336DB8FB0FDED71D92E55514EFD2132931270D40';
 // http://REDIRECT_URL#access_token=336DB8FB0FDED71D92E55514EFD2132931270D40
 
 // test account user token

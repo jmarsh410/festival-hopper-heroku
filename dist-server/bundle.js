@@ -611,7 +611,6 @@ var App = function (_Component) {
       if (typeof localStorage === 'undefined' && this.props.userIsLoggedIn) {
         return true;
       }
-      console.log('authenticate returns false');
       return false;
     }
   }, {
@@ -860,7 +859,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* jshint ignore:start */
 
-var authURL = 'https://untappd.com/oauth/authenticate/?client_id=B37286DA6E41C3C75634F4C0DB726E889052525C&response_type=token&redirect_url=http://festivalhopper.jeredmarshall.com/';
+var authURL = 'https://untappd.com/oauth/authenticate/?client_id=B37286DA6E41C3C75634F4C0DB726E889052525C&response_type=code&redirect_url=http://festivalhopper.jeredmarshall.com:5000';
 
 var Login = function (_Component) {
   _inherits(Login, _Component);

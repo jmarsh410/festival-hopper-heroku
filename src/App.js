@@ -13,9 +13,6 @@ import BrewerySearch from './components/brewery-search';
 import BeerListContainer from './components/beer-list-container';
 
 const urlParameter = '#access_token=';
-// const client_id = 'B37286DA6E41C3C75634F4C0DB726E889052525C';
-// const client_secret = '8E445ABC27BC99A5D67CBB98AEAA2E936E02AE28';
-// const myToken = '336DB8FB0FDED71D92E55514EFD2132931270D40';
 // http://REDIRECT_URL#access_token=336DB8FB0FDED71D92E55514EFD2132931270D40
 
 // test account user token
@@ -41,7 +38,7 @@ class App extends Component {
       }
     }
     // if on the server and logged in, then return true
-    if (typeof localStorage === 'undefined' && this.props.userIsLoggedIn) {
+    if (typeof localStorage === 'undefined' && this.props.isUserLoggedIn) {
       return true;
     }
     return false;

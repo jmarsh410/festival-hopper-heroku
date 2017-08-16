@@ -38,7 +38,7 @@ class App extends Component {
       }
     }
     // if on the server and logged in, then return true
-    if (typeof localStorage === 'undefined' && this.props.isUserLoggedIn) {
+    if (typeof localStorage === 'undefined' && this.props.userIsLoggedIn) {
       return true;
     }
     return false;

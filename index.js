@@ -58,9 +58,9 @@ function checkLoginStatus(req, res){
 
 function renderApp(req, res){
   var context = {};
-  var isUserLoggedIn = checkLoginStatus(req, res);
+  var userIsLoggedIn = checkLoginStatus(req, res);
   // console.log(res.get('Set-Cookie'));
-  // console.log('the user login status is: ' + isUserLoggedIn + '. and the path is ' + req.url);
+  // console.log('the user login status is: ' + userIsLoggedIn + '. and the path is ' + req.url);
 
   // get the contents of the index.html file
   var html = ReactDomServer.renderToString(
@@ -68,7 +68,7 @@ function renderApp(req, res){
       location = {req.url}
       context = {context}
     >
-      <App isUserLoggedIn={isUserLoggedIn}/>
+      <App userIsLoggedIn={userIsLoggedIn}/>
     </StaticRouter>
   );
 

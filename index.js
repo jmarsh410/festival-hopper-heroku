@@ -1,3 +1,4 @@
+var https = require('https');
 var express = require('express');
 var app = express();
 var cookieParser = require('cookie-parser');
@@ -27,16 +28,30 @@ function checkLoginStatus(req, res){
   if (req.cookies.userToken) {
     return true;
   }
-  const urlHash = '#access_token';
-  // if no cookie, check the request url for a hash that looks like #access_token=clienttoken
-  if (req.url.indexOf(urlHash) > -1){
-    res.clearCookie('userToken');
-    // create userToken cookie
-    res.cookie('userToken', req.url.split(urlHash).pop(), {
-      maxAge: 60*60*24*7, // expires in one week
+  console.log('the query string is: ', req.query);
+
+  // if we are getting the code, then send it back with more info
+  if (req.query.code) {
+    https.request('https://untappd.com/oauth/authorize/?client_id=' + process.env.FH_CLIENT_ID + '&client_secret=' + process.env.FH_CLIENT_SECRET + '&response_type=code&redirect_url=' + process.env.FH_REDIRECT_URL + '&code=' + req.query.code, function(res){
+      // handle errors if there are any
+
+      // these aren't getting called, probably because this is an async operation, and the response gets sent before it is done
+      console.log(res.headers);
+      console.log(res.statusCode);
+      // get the access_token out of the response
     });
-    return true;
   }
+
+  // if no cookie, check the request url for a hash that looks like #access_token=clienttoken
+  // if (req.query.code){
+  //   res.clearCookie('userToken');
+  //   // create userToken cookie
+  //   res.cookie('userToken', req.query.code, {
+  //     maxAge: 60*60*24*7, // expires in one week
+  //   });
+  //   console.log('the cookie header is ' + res.get('Set-Cookie'));
+  //   return true;
+  // }
   // the user is not logged in
   return false;
 }
@@ -44,7 +59,8 @@ function checkLoginStatus(req, res){
 function renderApp(req, res){
   var context = {};
   var userIsLoggedIn = checkLoginStatus(req, res);
-  console.log('the user login status is: ' + userIsLoggedIn + '. and the path is ' + req.url);
+  // console.log(res.get('Set-Cookie'));
+  // console.log('the user login status is: ' + userIsLoggedIn + '. and the path is ' + req.url);
   // get the contents of the index.html file
   var html = ReactDomServer.renderToString(
     <StaticRouter
@@ -57,14 +73,9 @@ function renderApp(req, res){
 
   // render the App for the appropriate url path
   if (context.url) { // HANDLE REDIRECTS
-    // on production, prevent caching so that redirects don't cache, because its super annoying
-    if (process.env.FH_ENV === 'development') {
-      console.log('app was redirected and not cached');
-      res.append('Cache-Control', 'no-cache, no-store, must-revalidate');
-    }
-    res.writeHead(301, {
+    res.writeHead(302, { // use a 302 becuase it doesn't get cached
       Location: context.url
-    })
+    });
     res.end();
   } else {
     res.render('index.nunj', { title: 'Festival Hopper', content: html });
@@ -72,6 +83,15 @@ function renderApp(req, res){
 }
 
 app.get('/*', renderApp);
+
+// REDIRECT URL FOR UNTAPPD
+// CODE HERE ...
+// 
+
+
+
+
+
 
 app.listen(process.env.FH_PORT || 5000, function(){
   console.log('express app is listening on port ' + process.env.FH_PORT || 5000);

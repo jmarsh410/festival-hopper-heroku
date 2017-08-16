@@ -58,16 +58,17 @@ function checkLoginStatus(req, res){
 
 function renderApp(req, res){
   var context = {};
-  var userIsLoggedIn = checkLoginStatus(req, res);
+  var isUserLoggedIn = checkLoginStatus(req, res);
   // console.log(res.get('Set-Cookie'));
-  // console.log('the user login status is: ' + userIsLoggedIn + '. and the path is ' + req.url);
+  // console.log('the user login status is: ' + isUserLoggedIn + '. and the path is ' + req.url);
+
   // get the contents of the index.html file
   var html = ReactDomServer.renderToString(
     <StaticRouter
       location = {req.url}
       context = {context}
     >
-      <App userIsLoggedIn={userIsLoggedIn}/>
+      <App isUserLoggedIn={isUserLoggedIn}/>
     </StaticRouter>
   );
 
@@ -83,15 +84,6 @@ function renderApp(req, res){
 }
 
 app.get('/*', renderApp);
-
-// REDIRECT URL FOR UNTAPPD
-// CODE HERE ...
-// 
-
-
-
-
-
 
 app.listen(process.env.FH_PORT || 5000, function(){
   console.log('express app is listening on port ' + process.env.FH_PORT || 5000);

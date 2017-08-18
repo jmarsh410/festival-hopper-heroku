@@ -26,7 +26,7 @@ app.set('views', './views');
 nunjucks.configure('views', { express: app, autoescape: false });
 app.set('view engine', 'nunjucks');
 
-function checkLoginStatus(req, res) {
+function checkLoginStatus(req) {
   // check the request for a cookie with a correct untapped id's
   if (req.cookies.userToken) {
     return true;
@@ -48,21 +48,27 @@ function checkLoginStatus(req, res) {
 
 function handleOath(req, res) {
   console.log('the query string is: ', req.query);
-  console.log('the url was: https://untappd.com/oauth/authorize/?client_id=' + process.env.FH_CLIENT_ID + '&client_secret=' + process.env.FH_CLIENT_SECRET + '&response_type=code&redirect_url=' + process.env.FH_REDIRECT_URL + '&code=' + req.query.code);
-  var apiReq = https.request('https://untappd.com/oauth/authorize/?client_id=' + process.env.FH_CLIENT_ID + '&client_secret=' + process.env.FH_CLIENT_SECRET + '&response_type=code&redirect_url=' + process.env.FH_REDIRECT_URL + '&code=' + req.query.code, function (apiRes) {
+  var url = 'https://untappd.com/oauth/authorize/?client_id=' + process.env.FH_CLIENT_ID + '&client_secret=' + process.env.FH_CLIENT_SECRET + '&response_type=code&redirect_url=' + process.env.FH_REDIRECT_URL + '&code=' + req.query.code;
+  console.log('the url was: ' + url);
+  var apiReq = https.request(url, function (apiRes) {
     // handle errors if there are any
 
     // these aren't getting called, probably because this is an async operation,
     // and the response gets sent before it is done
     console.log('statusCode:', apiRes.statusCode);
     console.log('headers:', apiRes.headers);
-    res.send('the api responded');
+    apiRes.on('data', function (chunk) {
+      console.log('BODY: ' + chunk);
+    });
+    apiRes.on('end', function () {
+      res.send('the api responded');
+    });
     // get the access_token out of the response
   });
-
   apiReq.on('error', function (err) {
     console.error(err);
   });
+  apiReq.end();
 }
 
 function handleRequest(req, res) {
@@ -104,5 +110,5 @@ function handleRequest(req, res) {
 app.get('/*', handleRequest);
 
 app.listen(process.env.FH_PORT || 5000, function () {
-  console.log('express app is listening on port ' + process.env.FH_PORT || 5000);
+  console.log('express app is listening on port ' + (process.env.FH_PORT || 5000));
 });

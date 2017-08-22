@@ -10,6 +10,7 @@ import Login from './components/login';
 import Categories from './components/categories';
 import BrewerySearch from './components/brewery-search';
 import BeerListContainer from './components/beer-list-container';
+import utils from './utils/utils';
 
 // const urlParameter = '#access_token=';
 // http://REDIRECT_URL#access_token=336DB8FB0FDED71D92E55514EFD2132931270D40
@@ -60,9 +61,9 @@ class App extends Component {
           <Route
             path="/logout"
             render={() => {
-            // delete the user token from local storage
+            // delete the user token from the cookie
               if (typeof localStorage !== 'undefined') {
-                localStorage.clear();
+                utils.removeClientCookie('untappd_access_token');
               }
               return (<Redirect to="/" />);
             }}

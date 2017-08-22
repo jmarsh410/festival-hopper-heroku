@@ -28,40 +28,36 @@ app.set('view engine', 'nunjucks');
 
 function checkLoginStatus(req) {
   // check the request for a cookie with a correct untapped id's
-  if (req.cookies.userToken) {
+  if (req.cookies.untappd_access_token) {
     return true;
   }
-
-  // if no cookie, check the request url for a hash that looks like #access_token=clienttoken
-  // if (req.query.code){
-  //   res.clearCookie('userToken');
-  //   // create userToken cookie
-  //   res.cookie('userToken', req.query.code, {
-  //     maxAge: 60*60*24*7, // expires in one week
-  //   });
-  //   console.log('the cookie header is ' + res.get('Set-Cookie'));
-  //   return true;
-  // }
   // the user is not logged in
   return false;
 }
 
 function handleOath(req, res) {
-  console.log('the query string is: ', req.query);
   var url = 'https://untappd.com/oauth/authorize/?client_id=' + process.env.FH_CLIENT_ID + '&client_secret=' + process.env.FH_CLIENT_SECRET + '&response_type=code&redirect_url=' + process.env.FH_REDIRECT_URL + '&code=' + req.query.code;
-  console.log('the url was: ' + url);
   var apiReq = https.request(url, function (apiRes) {
-    // handle errors if there are any
-
-    // these aren't getting called, probably because this is an async operation,
-    // and the response gets sent before it is done
     console.log('statusCode:', apiRes.statusCode);
     console.log('headers:', apiRes.headers);
+    var body = '';
     apiRes.on('data', function (chunk) {
       console.log('BODY: ' + chunk);
+      body += chunk;
     });
     apiRes.on('end', function () {
-      res.send('the api responded');
+      var bodyObj = JSON.parse(body);
+      // handle errors if there are any
+      if (apiRes.statusCode !== 200) {
+        res.send(bodyObj.meta.developer_friendly || bodyObj.meta.error_detail);
+        return;
+      }
+      // send the cookie and redirect to the curated page
+      res.cookie('untappd_access_token', bodyObj.response.access_token);
+      res.writeHead(302, {
+        Location: '/'
+      });
+      res.end();
     });
     // get the access_token out of the response
   });

@@ -168,6 +168,119 @@ module.exports = require("lodash");
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/* jshint ignore:start */
+
+function normalizeBreweryBeers(json) {
+  var bucket = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+  // code for undocumented api call
+  var array = json.response.beers.items;
+
+  // code for the documented api call
+  // const array = json.response.brewery.beer_list.items;
+
+  var beers = [];
+  array.forEach(function (obj, i) {
+    var normalizedBeer = {
+      id: obj.beer.bid,
+      name: obj.beer.beer_name,
+      brewery: obj.brewery.brewery_name,
+      image: obj.beer.beer_label,
+      description: '',
+      rating: 0,
+      isCheckedIn: false,
+      isOpen: false,
+      checked: false,
+      bucket: bucket,
+      index: i
+    };
+    beers.push(normalizedBeer);
+  });
+  return beers;
+}
+
+function getAccessToken() {
+  return document.cookie.replace(/(untappd_access_token=(\a*))/i, '$2');
+}
+
+var utils = {
+  generateId: function generateId(size) {
+    var idSize = typeof size !== 'number' ? size : 5;
+    var value = '';
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var length = chars.length;
+    for (var i = 0; i < idSize; i += 1) {
+      value += chars.charAt(Math.floor(Math.random() * length));
+    }
+    return value;
+  },
+
+  getAccessToken: getAccessToken,
+  normalizeBreweryBeers: normalizeBreweryBeers,
+  generateCheckInUrl: function generateCheckInUrl() {
+    return 'https://api.untappd.com/v4/checkin/add?access_token=' + localStorage.userToken;
+  },
+
+  // lists the beers that a brewery has
+  generateBreweryInfoUrl: function generateBreweryInfoUrl(breweryId) {
+    var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+    // brewery/beer_list/BREWERY_ID
+    // there is an undocumented api endpoint that the untappd website uses
+    // which can be used to get a brewery's beers
+    // this endpoint is subject to removal/changes since it is undocumented
+    return 'https://api.untappd.com/v4/brewery/beer_list/' + breweryId + '?access_token=' + localStorage.userToken + '&offset=' + offset;
+
+    // documented api call https://untappd.com/api/docs#breweryinfo
+    // return 'https://api.untappd.com/v4/brewery/info/'+ breweryId + '?access_token=' + localStorage.userToken;
+  },
+
+  // lists breweries that match the search term
+  generateBrewerySearchUrl: function generateBrewerySearchUrl(breweryName) {
+    return 'https://api.untappd.com/v4/search/brewery/?access_token=' + getAccessToken() + '&q=' + breweryName + '&limit=50';
+  },
+  makeBreweryBeerList: function makeBreweryBeerList(json, id) {
+    var beers = normalizeBreweryBeers(json);
+    // works off a previous list or creates a new one
+    return {
+      id: id,
+      beers: [beers],
+      checkCount: 0,
+      maxItems: json.response.total_count,
+      beerCount: beers.length
+    };
+  },
+  makeBreweryItems: function makeBreweryItems(json) {
+    // loop over each brewery and create an object for it, then return array of those objects
+    var breweries = [];
+    json.response.brewery.items.forEach(function (breweryObj) {
+      // props: name, image, id
+      var normalizedBrewery = {
+        id: breweryObj.brewery.brewery_id,
+        name: breweryObj.brewery.brewery_name,
+        image: breweryObj.brewery.brewery_label
+      };
+      breweries.push(normalizedBrewery);
+    });
+    return breweries;
+  },
+  removeClientCookie: function removeClientCookie(name) {
+    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;'; // if this doesn't work, try adding 'path=/' to it
+  }
+};
+
+exports.default = utils;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
 exports = module.exports = __webpack_require__(1)(undefined);
 // imports
 
@@ -179,7 +292,7 @@ exports.push([module.i, ".btn {\n  box-sizing: border-box;\n  padding: 10px;\n  
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -259,112 +372,6 @@ var List = function (_Component) {
 }(_react.Component);
 
 exports.default = List;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/* jshint ignore:start */
-
-function normalizeBreweryBeers(json) {
-  var bucket = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-
-  // code for undocumented api call
-  var array = json.response.beers.items;
-
-  // code for the documented api call
-  // const array = json.response.brewery.beer_list.items;
-
-  var beers = [];
-  array.forEach(function (obj, i) {
-    var normalizedBeer = {
-      id: obj.beer.bid,
-      name: obj.beer.beer_name,
-      brewery: obj.brewery.brewery_name,
-      image: obj.beer.beer_label,
-      description: '',
-      rating: 0,
-      isCheckedIn: false,
-      isOpen: false,
-      checked: false,
-      bucket: bucket,
-      index: i
-    };
-    beers.push(normalizedBeer);
-  });
-  return beers;
-}
-
-var utils = {
-  generateId: function generateId(size) {
-    if (typeof size !== 'number') {
-      size = 5;
-    }
-    var value = '',
-        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
-        length = chars.length;
-    for (var i = 0; i < size; ++i) {
-      value += chars.charAt(Math.floor(Math.random() * length));
-    }
-    return value;
-  },
-  generateCheckInUrl: function generateCheckInUrl() {
-    return 'https://api.untappd.com/v4/checkin/add?access_token=' + localStorage.userToken;
-  },
-
-  // lists the beers that a brewery has
-  generateBreweryInfoUrl: function generateBreweryInfoUrl(breweryId) {
-    var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-
-    // brewery/beer_list/BREWERY_ID
-    // there is an undocumented api endpoint that the untappd website uses which can be used to get a brewery's beers
-    // this endpoint is subject to removal/changes since it is undocumented
-    return 'https://api.untappd.com/v4/brewery/beer_list/' + breweryId + '?access_token=' + localStorage.userToken + '&offset=' + offset;
-
-    // documented api call https://untappd.com/api/docs#breweryinfo
-    // return 'https://api.untappd.com/v4/brewery/info/'+ breweryId + '?access_token=' + localStorage.userToken;
-  },
-
-  // lists breweries that match the search term
-  generateBrewerySearchUrl: function generateBrewerySearchUrl(breweryName) {
-    return 'https://api.untappd.com/v4/search/brewery/?access_token=' + localStorage.userToken + '&q=' + breweryName + '&limit=50';
-  },
-
-  normalizeBreweryBeers: normalizeBreweryBeers,
-  makeBreweryBeerList: function makeBreweryBeerList(json, id) {
-    var beers = normalizeBreweryBeers(json);
-    // works off a previous list or creates a new one
-    return {
-      id: id,
-      beers: [beers],
-      checkCount: 0,
-      maxItems: json.response.total_count,
-      beerCount: beers.length
-    };
-  },
-  makeBreweryItems: function makeBreweryItems(json) {
-    // loop over each brewery and create an object for it, then return array of those objects
-    var breweries = [];
-    json.response.brewery.items.forEach(function (breweryObj) {
-      // props: name, image, id
-      var normalizedBrewery = {
-        id: breweryObj.brewery.brewery_id,
-        name: breweryObj.brewery.brewery_name,
-        image: breweryObj.brewery.brewery_label
-      };
-      breweries.push(normalizedBrewery);
-    });
-    return breweries;
-  }
-};
-
-exports.default = utils;
 
 /***/ }),
 /* 7 */
@@ -560,15 +567,19 @@ var _beerListContainer = __webpack_require__(29);
 
 var _beerListContainer2 = _interopRequireDefault(_beerListContainer);
 
+var _utils = __webpack_require__(4);
+
+var _utils2 = _interopRequireDefault(_utils);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* jshint ignore:start */
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var urlParameter = '#access_token=';
+// const urlParameter = '#access_token=';
 // http://REDIRECT_URL#access_token=336DB8FB0FDED71D92E55514EFD2132931270D40
 
 // test account user token
@@ -590,18 +601,13 @@ var App = function (_Component) {
     key: 'authenticate',
     value: function authenticate() {
       // check if the user's auth token can be found in local storage or a query string
-      // be aware that this method won't work if there is any other information in the url after the access_token. though if access_token exists, it would always be alone since this would be right after authenticating    
+      // be aware that this method won't work if there is any other information in the url 
+      // after the access_token. though if access_token exists, it would always be alone 
+      // since this would be right after authenticating    
       if (typeof localStorage !== 'undefined') {
         // localstorage won't exist on the server
-        console.log('the authenticate is running on the client side once the scripts load');
-        if (localStorage.getItem('userToken')) {
+        if (document.cookie.includes('untappd_access_token')) {
           return true;
-        } else {
-          var queryToken = window.location.href.indexOf(urlParameter) > -1 ? window.location.href.split(urlParameter).pop() : null;
-          if (queryToken) {
-            localStorage.setItem('userToken', queryToken);
-            return true;
-          }
         }
       }
       // if on the server and logged in, then return true
@@ -619,23 +625,36 @@ var App = function (_Component) {
         'div',
         null,
         _react2.default.createElement(_header2.default, null),
-        _react2.default.createElement(_reactRouterDom.Route, { path: '/', children: function children(props) {
-            // used the children render method because it always gets called regardless of current route/location
-            return props.location.pathname !== '/login' ? _react2.default.createElement(_nav2.default, null) : null;
-          } }),
+        _react2.default.createElement(_reactRouterDom.Route, {
+          path: '/',
+          children: function children(props) {
+            return (
+              // used the children render method because it always gets
+              // called regardless of current route/location
+              props.location.pathname !== '/login' ? _react2.default.createElement(_nav2.default, null) : null
+            );
+          }
+        }),
         _react2.default.createElement(
           'main',
           null,
-          _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', render: function render() {
+          _react2.default.createElement(_reactRouterDom.Route, {
+            exact: true,
+            path: '/',
+            render: function render() {
               return _this2.authenticate() ? _react2.default.createElement(_reactRouterDom.Redirect, { to: '/curated' }) : _react2.default.createElement(_reactRouterDom.Redirect, { to: '/login' });
-            } }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/logout', render: function render() {
-              // delete the user token from local storage
+            }
+          }),
+          _react2.default.createElement(_reactRouterDom.Route, {
+            path: '/logout',
+            render: function render() {
+              // delete the user token from the cookie
               if (typeof localStorage !== 'undefined') {
-                localStorage.clear();
+                _utils2.default.removeClientCookie('untappd_access_token');
               }
               return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
-            } }),
+            }
+          }),
           _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/curated', component: _categories2.default }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '/curated/:listId', component: _beerListContainer2.default }),
           _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/brewery-search', component: _brewerySearch2.default }),
@@ -911,7 +930,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(4);
+__webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -978,7 +997,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _list = __webpack_require__(5);
+var _list = __webpack_require__(6);
 
 var _list2 = _interopRequireDefault(_list);
 
@@ -990,7 +1009,7 @@ var _pbu_40_black = __webpack_require__(7);
 
 var _pbu_40_black2 = _interopRequireDefault(_pbu_40_black);
 
-var _utils = __webpack_require__(6);
+var _utils = __webpack_require__(4);
 
 var _utils2 = _interopRequireDefault(_utils);
 
@@ -1163,7 +1182,7 @@ var _lodash = __webpack_require__(3);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _list = __webpack_require__(5);
+var _list = __webpack_require__(6);
 
 var _list2 = _interopRequireDefault(_list);
 
@@ -1179,7 +1198,7 @@ var _loadingSpinner = __webpack_require__(10);
 
 var _loadingSpinner2 = _interopRequireDefault(_loadingSpinner);
 
-var _utils = __webpack_require__(6);
+var _utils = __webpack_require__(4);
 
 var _utils2 = _interopRequireDefault(_utils);
 
@@ -1187,7 +1206,7 @@ __webpack_require__(28);
 
 __webpack_require__(11);
 
-__webpack_require__(4);
+__webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1233,6 +1252,7 @@ var BrewerySearch = function (_Component) {
       if (breweryName.length > 0) {
         // build the fetch
         var searchUrl = _utils2.default.generateBrewerySearchUrl(breweryName);
+        console.log(searchUrl);
         var fetchResponse = void 0;
         self.showModalSpinner();
         fetch(searchUrl).then(function (response) {
@@ -1440,11 +1460,11 @@ var _beerListControls = __webpack_require__(34);
 
 var _beerListControls2 = _interopRequireDefault(_beerListControls);
 
-var _list = __webpack_require__(5);
+var _list = __webpack_require__(6);
 
 var _list2 = _interopRequireDefault(_list);
 
-var _utils = __webpack_require__(6);
+var _utils = __webpack_require__(4);
 
 var _utils2 = _interopRequireDefault(_utils);
 
@@ -2311,7 +2331,7 @@ var _react2 = _interopRequireDefault(_react);
 
 __webpack_require__(11);
 
-__webpack_require__(4);
+__webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

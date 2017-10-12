@@ -1,5 +1,6 @@
-/* jshint ignore:start */
+import Cookie from 'js-cookie';
 
+/* jshint ignore:start */
 function normalizeBreweryBeers(json, bucket = 0) {
   // code for undocumented api call
   const array = json.response.beers.items;
@@ -28,7 +29,7 @@ function normalizeBreweryBeers(json, bucket = 0) {
 }
 
 function getAccessToken() {
-  return document.cookie.replace(/(untappd_access_token=(\a*))/i, '$2');
+  return Cookie.get('untappd_access_token');
 }
 
 const utils = {
@@ -47,7 +48,7 @@ const utils = {
   getAccessToken,
   normalizeBreweryBeers,
   generateCheckInUrl() {
-    return `https://api.untappd.com/v4/checkin/add?access_token=${localStorage.userToken}`;
+    return `https://api.untappd.com/v4/checkin/add?access_token=${getAccessToken()}`;
   },
   // lists the beers that a brewery has
   generateBreweryInfoUrl(breweryId, offset = 0) {
@@ -55,10 +56,10 @@ const utils = {
     // there is an undocumented api endpoint that the untappd website uses
     // which can be used to get a brewery's beers
     // this endpoint is subject to removal/changes since it is undocumented
-    return `https://api.untappd.com/v4/brewery/beer_list/${breweryId}?access_token=${localStorage.userToken}&offset=${offset}`;
+    return `https://api.untappd.com/v4/brewery/beer_list/${breweryId}?access_token=${getAccessToken()}&offset=${offset}`;
 
     // documented api call https://untappd.com/api/docs#breweryinfo
-    // return 'https://api.untappd.com/v4/brewery/info/'+ breweryId + '?access_token=' + localStorage.userToken;
+    // return 'https://api.untappd.com/v4/brewery/info/'+ breweryId + '?access_token=' + getAccessToken();
   },
   // lists breweries that match the search term
   generateBrewerySearchUrl(breweryName) {
@@ -90,7 +91,10 @@ const utils = {
     return breweries;
   },
   removeClientCookie(name) {
-    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:01 GMT;`; // if this doesn't work, try adding 'path=/' to it
+    Cookie.remove('untappd_access_token');
+  },
+  isClientSide() {
+    return typeof window !== 'undefined';
   },
 };
 

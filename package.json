@@ -8,13 +8,16 @@
     "build:server": "webpack --config webpack.config.server.js",
     "build:client": "webpack --config webpack.config.client.js",
     "build:index": "babel index.jsx -w -o index-compiled.js",
-    "start:nodemon": "nodemon ./index-compiled.js"
+    "start:nodemon": "nodemon ./index-compiled.js",
+    "start:mongo": "mongod --dbpath ~/data/db"
   },
   "author": "Jered Marshall",
   "license": "ISC",
   "dependencies": {
     "cookie-parser": "^1.4.3",
     "express": "^4.15.3",
+    "isomorphic-fetch": "^2.2.1",
+    "js-cookie": "^2.1.4",
     "lodash": "^4.17.4",
     "nunjucks": "^3.0.1",
     "react": "^15.4.2",

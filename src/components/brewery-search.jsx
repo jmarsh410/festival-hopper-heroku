@@ -11,6 +11,8 @@ import '../styles/brewery-search.css';
 import '../styles/search.css';
 import '../styles/button.css';
 
+import 'isomorphic-fetch';
+
 class BrewerySearch extends Component {
   constructor(props) {
     super(props);

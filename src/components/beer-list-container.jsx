@@ -12,6 +12,7 @@ import Modal from './modal';
 import Notification from './notification';
 import Search from './search';
 import Select from './select';
+import 'isomorphic-fetch';
 
 // storage for 
 const apiCallInfo = {
@@ -105,6 +106,8 @@ class BeerListContainer extends Component {
     const apiOffset = add ? bucketNum * this.defaultListSize : 0;
     this.clearNotifications();
     this.showLoadingSpinner();
+    console.log(`isClientSide: ${utils.isClientSide()}`);
+    console.log(fetch);
     fetch(this.apiEndpoint(this.listId, apiOffset))
       .then((response)=>{
         if (response.status !== 200) {
@@ -135,9 +138,6 @@ class BeerListContainer extends Component {
       });
   }
   getInitialBeers(){
-    if (!localStorage.userToken) {
-      return console.log('User is not logged in');
-    }
     // check localStorage for this list's beers
     if (localStorage[this.listId]) {
       this.updateList(JSON.parse(localStorage[this.listId]));
@@ -203,7 +203,7 @@ class BeerListContainer extends Component {
       const fetchOpts = {
         method: 'POST',
         body: formData,
-      }
+      };
       let fetchResponse;
       fetch(utils.generateCheckInUrl(), fetchOpts)
         .then((response)=>{
@@ -328,13 +328,17 @@ class BeerListContainer extends Component {
     return beers;
   }
   componentWillMount(){
-    // add a scroll event listener
-    window.addEventListener('scroll', this.handleScroll);
+    if (utils.isClientSide()) {
+      // add a scroll event listener
+      window.addEventListener('scroll', this.handleScroll);
+    }
     this.getInitialBeers();
   }
   componentWillUnmount(){
-    // add a scroll event listener
-    window.removeEventListener('scroll', this.handleScroll);
+    if (utils.isClientSide()) {
+      // add a scroll event listener
+      window.removeEventListener('scroll', this.handleScroll);
+    }
   }
   render(){
     // const self = this;

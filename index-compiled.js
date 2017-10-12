@@ -35,7 +35,7 @@ function checkLoginStatus(req) {
   return false;
 }
 
-function handleOath(req, res) {
+function handleOauth(req, res) {
   var url = 'https://untappd.com/oauth/authorize/?client_id=' + process.env.FH_CLIENT_ID + '&client_secret=' + process.env.FH_CLIENT_SECRET + '&response_type=code&redirect_url=' + process.env.FH_REDIRECT_URL + '&code=' + req.query.code;
   var apiReq = https.request(url, function (apiRes) {
     console.log('statusCode:', apiRes.statusCode);
@@ -53,7 +53,7 @@ function handleOath(req, res) {
         return;
       }
       // send the cookie and redirect to the curated page
-      res.cookie('untappd_access_token', bodyObj.response.access_token);
+      res.cookie('untappd_access_token', bodyObj.response.access_token, { maxAge: 31536000 }); // max age = 1 year
       res.writeHead(302, {
         Location: '/'
       });
@@ -74,7 +74,7 @@ function handleRequest(req, res) {
 
   // if the request has a query code, then we need to go through the oauth, process
   if (needsOauth) {
-    handleOath(req, res);
+    handleOauth(req, res);
   } else {
     // otherwise, the user is either logged in or not, in which case they can proceed
     // console.log(res.get('Set-Cookie'));

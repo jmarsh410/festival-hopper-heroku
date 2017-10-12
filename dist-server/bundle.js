@@ -61,7 +61,7 @@ exports["App"] =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 13);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -174,8 +174,14 @@ module.exports = require("lodash");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/* jshint ignore:start */
 
+var _jsCookie = __webpack_require__(24);
+
+var _jsCookie2 = _interopRequireDefault(_jsCookie);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* jshint ignore:start */
 function normalizeBreweryBeers(json) {
   var bucket = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
@@ -206,7 +212,7 @@ function normalizeBreweryBeers(json) {
 }
 
 function getAccessToken() {
-  return document.cookie.replace(/(untappd_access_token=(\a*))/i, '$2');
+  return _jsCookie2.default.get('untappd_access_token');
 }
 
 var utils = {
@@ -224,7 +230,7 @@ var utils = {
   getAccessToken: getAccessToken,
   normalizeBreweryBeers: normalizeBreweryBeers,
   generateCheckInUrl: function generateCheckInUrl() {
-    return 'https://api.untappd.com/v4/checkin/add?access_token=' + localStorage.userToken;
+    return 'https://api.untappd.com/v4/checkin/add?access_token=' + getAccessToken();
   },
 
   // lists the beers that a brewery has
@@ -235,10 +241,10 @@ var utils = {
     // there is an undocumented api endpoint that the untappd website uses
     // which can be used to get a brewery's beers
     // this endpoint is subject to removal/changes since it is undocumented
-    return 'https://api.untappd.com/v4/brewery/beer_list/' + breweryId + '?access_token=' + localStorage.userToken + '&offset=' + offset;
+    return 'https://api.untappd.com/v4/brewery/beer_list/' + breweryId + '?access_token=' + getAccessToken() + '&offset=' + offset;
 
     // documented api call https://untappd.com/api/docs#breweryinfo
-    // return 'https://api.untappd.com/v4/brewery/info/'+ breweryId + '?access_token=' + localStorage.userToken;
+    // return 'https://api.untappd.com/v4/brewery/info/'+ breweryId + '?access_token=' + getAccessToken();
   },
 
   // lists breweries that match the search term
@@ -271,7 +277,10 @@ var utils = {
     return breweries;
   },
   removeClientCookie: function removeClientCookie(name) {
-    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;'; // if this doesn't work, try adding 'path=/' to it
+    _jsCookie2.default.remove('untappd_access_token');
+  },
+  isClientSide: function isClientSide() {
+    return typeof window !== 'undefined';
   }
 };
 
@@ -312,7 +321,7 @@ var _lodash = __webpack_require__(3);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-__webpack_require__(21);
+__webpack_require__(22);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -414,7 +423,7 @@ var _lodash = __webpack_require__(3);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-__webpack_require__(26);
+__webpack_require__(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -475,7 +484,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(27);
+__webpack_require__(29);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -526,6 +535,12 @@ exports.push([module.i, ".search {\n  display: flex;\n}\n.search-field {\n  flex
 
 /***/ }),
 /* 12 */
+/***/ (function(module, exports) {
+
+module.exports = require("isomorphic-fetch");
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -543,27 +558,27 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-var _header = __webpack_require__(13);
+var _header = __webpack_require__(14);
 
 var _header2 = _interopRequireDefault(_header);
 
-var _nav = __webpack_require__(15);
+var _nav = __webpack_require__(16);
 
 var _nav2 = _interopRequireDefault(_nav);
 
-var _login = __webpack_require__(17);
+var _login = __webpack_require__(18);
 
 var _login2 = _interopRequireDefault(_login);
 
-var _categories = __webpack_require__(20);
+var _categories = __webpack_require__(21);
 
 var _categories2 = _interopRequireDefault(_categories);
 
-var _brewerySearch = __webpack_require__(24);
+var _brewerySearch = __webpack_require__(26);
 
 var _brewerySearch2 = _interopRequireDefault(_brewerySearch);
 
-var _beerListContainer = __webpack_require__(29);
+var _beerListContainer = __webpack_require__(31);
 
 var _beerListContainer2 = _interopRequireDefault(_beerListContainer);
 
@@ -671,7 +686,7 @@ var App = function (_Component) {
 exports.default = App;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -689,7 +704,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-__webpack_require__(14);
+__webpack_require__(15);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -738,7 +753,7 @@ var Header = function (_Component) {
 exports.default = Header;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -752,7 +767,7 @@ exports.push([module.i, ".header {\n  margin-bottom: 0px;\n  padding: 10px;\n  c
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -770,7 +785,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-__webpack_require__(16);
+__webpack_require__(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -827,7 +842,7 @@ var Nav = function (_Component) {
 exports.default = Nav;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -841,7 +856,7 @@ exports.push([module.i, ".nav ul {\n  display: flex;\n  margin: 0;\n  padding: 0
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -857,11 +872,11 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _buttonAnchor = __webpack_require__(18);
+var _buttonAnchor = __webpack_require__(19);
 
 var _buttonAnchor2 = _interopRequireDefault(_buttonAnchor);
 
-__webpack_require__(19);
+__webpack_require__(20);
 
 var _pbu_40_black = __webpack_require__(7);
 
@@ -914,7 +929,7 @@ var Login = function (_Component) {
 exports.default = Login;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -967,7 +982,7 @@ var ButtonAnchor = function (_Component) {
 exports.default = ButtonAnchor;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -981,7 +996,7 @@ exports.push([module.i, ".login {\n  position: absolute;\n  left: 0;\n  right: 0
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1001,7 +1016,7 @@ var _list = __webpack_require__(6);
 
 var _list2 = _interopRequireDefault(_list);
 
-var _category = __webpack_require__(22);
+var _category = __webpack_require__(23);
 
 var _category2 = _interopRequireDefault(_category);
 
@@ -1013,7 +1028,7 @@ var _utils = __webpack_require__(4);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-__webpack_require__(23);
+__webpack_require__(25);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1059,7 +1074,7 @@ var Categories = function (_Component) {
 exports.default = Categories;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1073,7 +1088,7 @@ exports.push([module.i, ".list-title {\n  font-family: var(--title-font-family);
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1148,7 +1163,13 @@ var Category = function (_Component) {
 exports.default = Category;
 
 /***/ }),
-/* 23 */
+/* 24 */
+/***/ (function(module, exports) {
+
+module.exports = require("js-cookie");
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1162,7 +1183,7 @@ exports.push([module.i, ".categories-separator {\n  text-align: center;\n  margi
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1186,7 +1207,7 @@ var _list = __webpack_require__(6);
 
 var _list2 = _interopRequireDefault(_list);
 
-var _brewery = __webpack_require__(25);
+var _brewery = __webpack_require__(27);
 
 var _brewery2 = _interopRequireDefault(_brewery);
 
@@ -1202,11 +1223,13 @@ var _utils = __webpack_require__(4);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-__webpack_require__(28);
+__webpack_require__(30);
 
 __webpack_require__(11);
 
 __webpack_require__(5);
+
+__webpack_require__(12);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1317,7 +1340,7 @@ var BrewerySearch = function (_Component) {
 exports.default = BrewerySearch;
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1390,7 +1413,7 @@ var Brewery = function (_Component) {
 exports.default = Brewery;
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1404,7 +1427,7 @@ exports.push([module.i, ".modalContainer {\n  position: fixed;\n  top: 0;\n  lef
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1418,7 +1441,7 @@ exports.push([module.i, "@keyframes spin {\n  0% {\n    transform: rotate(0deg);
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1432,7 +1455,7 @@ exports.push([module.i, ".brewerySearch {\n  margin-top: 4%;\n}", ""]);
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1452,11 +1475,11 @@ var _lodash = __webpack_require__(3);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _beer = __webpack_require__(30);
+var _beer = __webpack_require__(32);
 
 var _beer2 = _interopRequireDefault(_beer);
 
-var _beerListControls = __webpack_require__(34);
+var _beerListControls = __webpack_require__(36);
 
 var _beerListControls2 = _interopRequireDefault(_beerListControls);
 
@@ -1468,7 +1491,7 @@ var _utils = __webpack_require__(4);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var _dataLists = __webpack_require__(36);
+var _dataLists = __webpack_require__(38);
 
 var _dataLists2 = _interopRequireDefault(_dataLists);
 
@@ -1480,17 +1503,19 @@ var _modal = __webpack_require__(9);
 
 var _modal2 = _interopRequireDefault(_modal);
 
-var _notification = __webpack_require__(38);
+var _notification = __webpack_require__(40);
 
 var _notification2 = _interopRequireDefault(_notification);
 
-var _search = __webpack_require__(40);
+var _search = __webpack_require__(42);
 
 var _search2 = _interopRequireDefault(_search);
 
-var _select = __webpack_require__(41);
+var _select = __webpack_require__(43);
 
 var _select2 = _interopRequireDefault(_select);
+
+__webpack_require__(12);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1621,6 +1646,8 @@ var BeerListContainer = function (_Component) {
       var apiOffset = add ? bucketNum * this.defaultListSize : 0;
       this.clearNotifications();
       this.showLoadingSpinner();
+      console.log('isClientSide: ' + _utils2.default.isClientSide());
+      console.log(fetch);
       fetch(this.apiEndpoint(this.listId, apiOffset)).then(function (response) {
         if (response.status !== 200) {
           self.addNotification({ id: _utils2.default.generateId(), text: 'Error: Server responded with status code of ' + response.status, type: 'error' });
@@ -1650,9 +1677,6 @@ var BeerListContainer = function (_Component) {
   }, {
     key: 'getInitialBeers',
     value: function getInitialBeers() {
-      if (!localStorage.userToken) {
-        return console.log('User is not logged in');
-      }
       // check localStorage for this list's beers
       if (localStorage[this.listId]) {
         this.updateList(JSON.parse(localStorage[this.listId]));
@@ -1856,15 +1880,19 @@ var BeerListContainer = function (_Component) {
   }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
-      // add a scroll event listener
-      window.addEventListener('scroll', this.handleScroll);
+      if (_utils2.default.isClientSide()) {
+        // add a scroll event listener
+        window.addEventListener('scroll', this.handleScroll);
+      }
       this.getInitialBeers();
     }
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      // add a scroll event listener
-      window.removeEventListener('scroll', this.handleScroll);
+      if (_utils2.default.isClientSide()) {
+        // add a scroll event listener
+        window.removeEventListener('scroll', this.handleScroll);
+      }
     }
   }, {
     key: 'render',
@@ -1936,7 +1964,7 @@ var BeerListContainer = function (_Component) {
 exports.default = BeerListContainer;
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1952,11 +1980,11 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _checkbox = __webpack_require__(31);
+var _checkbox = __webpack_require__(33);
 
 var _checkbox2 = _interopRequireDefault(_checkbox);
 
-__webpack_require__(33);
+__webpack_require__(35);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2059,7 +2087,7 @@ var Beer = function (_Component) {
 exports.default = Beer;
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2075,7 +2103,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(32);
+__webpack_require__(34);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2113,7 +2141,7 @@ var Checkbox = function (_Component) {
 exports.default = Checkbox;
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -2127,7 +2155,7 @@ exports.push([module.i, ".checkbox {\n  position: relative;\n}\n.checkbox-input 
 
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -2141,7 +2169,7 @@ exports.push([module.i, ".beers {\n  margin-bottom: 100px;\n}\n/*.beer.checkedIn
 
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2157,7 +2185,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(35);
+__webpack_require__(37);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2193,7 +2221,7 @@ var BeerListControls = function (_Component) {
 exports.default = BeerListControls;
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -2207,7 +2235,7 @@ exports.push([module.i, ".beerListControls {\n  display: flex;\n  align-items: c
 
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2217,7 +2245,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _indexFest = __webpack_require__(37);
+var _indexFest = __webpack_require__(39);
 
 var _indexFest2 = _interopRequireDefault(_indexFest);
 
@@ -2230,7 +2258,7 @@ var DataLists = {
 exports.default = DataLists;
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2243,7 +2271,7 @@ var index = { "id": "index", "beers": [[{ "id": 1181221, "name": "IPA", "brewery
 exports.default = index;
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2259,7 +2287,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(39);
+__webpack_require__(41);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2299,7 +2327,7 @@ var Notification = function (_Component) {
 exports.default = Notification;
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -2313,7 +2341,7 @@ exports.push([module.i, ".notification {\n  display: block;\n  padding: 10px;\n}
 
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2372,7 +2400,7 @@ var Search = function (_Component) {
 exports.default = Search;
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2388,7 +2416,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(42);
+__webpack_require__(44);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2440,7 +2468,7 @@ var Select = function (_Component) {
 exports.default = Select;
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);

@@ -5,6 +5,7 @@ const React = require('react');
 const ReactDomServer = require('react-dom/server');
 const StaticRouter = require('react-router').StaticRouter;
 const nunjucks = require('nunjucks');
+const MongoClient = require('mongodb').MongoClient;
 
 const app = express();
 
@@ -51,7 +52,7 @@ function handleOauth(req, res) {
         return;
       }
       // send the cookie and redirect to the curated page
-      res.cookie('untappd_access_token', bodyObj.response.access_token, {maxAge: 31536000}); // max age = 1 year
+      res.cookie('untappd_access_token', bodyObj.response.access_token, { maxAge: 31536000 }); // max age = 1 year
       res.writeHead(302, {
         Location: '/',
       });
@@ -98,6 +99,26 @@ function handleRequest(req, res) {
     }
   }
 }
+
+app.get('/api/curated-lists', (req, res) => {
+  // get the lists from the database
+  MongoClient.connect(process.env.FH_MONGO_DB, (err, db) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(db);
+    db.collection('curatedlists').find().toArray((findErr, docs) => {
+      if (findErr) {
+        return console.log(findErr);
+      }
+      console.log('found the following records');
+      console.log(docs);
+      res.send(docs);
+      return res.end();
+    });
+    console.log('successfully connected to database server');
+  });
+});
 
 app.get('/*', handleRequest);
 

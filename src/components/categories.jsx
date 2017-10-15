@@ -1,28 +1,42 @@
 /* jshint ignore:start */
 
+import 'isomorphic-fetch';
 import React, { Component } from 'react';
 import List from './list';
 import Category from './category';
-import image from '../images/pbu_40_black.png';
-import utils from '../utils/utils';
 
 // css
 import '../styles/categories.css';
 
-const Items = [
-  {
-    id: utils.generateId(),
-    name: 'Index Fest',
-    location: 'Austin Statesman',
-    img: image,
-  },
-];
-
 class Categories extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { isLoaded: false };
+    fetch('api/curated-lists')
+      .then((response) => {
+        if (response.status !== 200) {
+          console.log('could not get curated lists');
+        }
+        return response.json();
+      })
+      .then((json) => {
+        console.log(json);
+        this.items = json;
+        this.setState({ isLoaded: true });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   render() {
+    if (!this.state.isLoaded) {
+      return (
+        <div>...loading</div>
+      );
+    }
     return (
       <div className="categories">
-        <List items={Items} type={Category} title="Curated Lists" />
+        <List items={this.items} type={Category} title="Curated Lists" />
       </div>
     );
   }

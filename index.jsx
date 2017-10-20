@@ -75,20 +75,24 @@ function handleRequest(req, res) {
   if (needsOauth) {
     handleOauth(req, res);
   } else {
+    let configKey = 'none'; // key to use for the appData. it will be route specific
     const context = {};
     const promiseArray = [];
     // loop through the dataRoutes and build an array of
     // all data fetching promises that need to be fulfilled
-    dataRoutes.forEach((route) => {
+    dataRoutes.some((route) => {
       if (route.url === req.url) {
+        configKey = route.componentName;
         promiseArray.push(route.data()); // pushes promise onto the promise array
+        return true;
       }
+      return false;
     });
     // once any required data has been retrieved, render the app and store
     // the data on the context object used by StaticRouter
     Promise.all(promiseArray)
       .then((values) => {
-        context.data = values[0];
+        context.data = { [configKey]: values[0] };
         const html = ReactDomServer.renderToString(
           <StaticRouter
             location={req.url}
@@ -105,7 +109,7 @@ function handleRequest(req, res) {
           });
           res.end();
         } else {
-          res.render('index.nunj', { title: 'Festival Hopper', content: html, appData: context.data });
+          res.render('index.nunj', { title: 'Festival Hopper', content: html, appData: JSON.stringify(context.data) });
         }
       })
       .catch((err) => {

@@ -61,8 +61,8 @@ class App extends Component {
           <Route
             path="/logout"
             render={() => {
-            // delete the user token from the cookie
-              if (typeof localStorage !== 'undefined') {
+              // delete the user's access token cookie
+              if (utils.isClientSide()) {
                 utils.removeClientCookie('untappd_access_token');
               }
               return (<Redirect to="/" />);
@@ -72,12 +72,11 @@ class App extends Component {
             exact
             path="/curated"
             render={({ staticContext }) => {
-              let items = [];
-              console.log('the data passed into the /curated <Route /> is: ', staticContext);
-              if (staticContext && staticContext.data) {
-                items = staticContext.data;
+              if (staticContext && staticContext.data && staticContext.data.categories) {
+                // during SSR, pass in category data directly
+                return (<Categories items={staticContext.data.categories} />);
               }
-              return <Categories items={items} />;
+              return (<Categories />);
             }}
           />
           <Route path="/curated/:listId" component={BeerListContainer} />

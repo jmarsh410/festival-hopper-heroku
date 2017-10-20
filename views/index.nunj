@@ -11,6 +11,9 @@
   <div id="root">
     {{ content }}
   </div>
+  <script>
+    window.appData = {{ appData }};
+  </script>
   <script type="text/javascript" src="/js/main.js"></script>
 </body>
 </html>

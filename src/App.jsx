@@ -68,7 +68,18 @@ class App extends Component {
               return (<Redirect to="/" />);
             }}
           />
-          <Route exact path="/curated" component={Categories} />
+          <Route
+            exact
+            path="/curated"
+            render={({ staticContext }) => {
+              let items = [];
+              console.log('the data passed into the /curated <Route /> is: ', staticContext);
+              if (staticContext && staticContext.data) {
+                items = staticContext.data;
+              }
+              return <Categories items={items} />;
+            }}
+          />
           <Route path="/curated/:listId" component={BeerListContainer} />
           <Route exact path="/brewery-search" component={BrewerySearch} />
           <Route path="/brewery/:listId" component={BeerListContainer} />

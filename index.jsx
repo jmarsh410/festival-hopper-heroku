@@ -1,11 +1,12 @@
-const https = require('https');
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const React = require('react');
-const ReactDomServer = require('react-dom/server');
-const StaticRouter = require('react-router').StaticRouter;
-const nunjucks = require('nunjucks');
-const MongoClient = require('mongodb').MongoClient;
+import https from 'https';
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import React from 'react';
+import ReactDomServer from 'react-dom/server';
+import { StaticRouter } from 'react-router';
+import nunjucks from 'nunjucks';
+import dataRoutes from './db/data-routes';
+import dbFunctions from './db/database-functions';
 
 const app = express();
 
@@ -67,57 +68,64 @@ function handleOauth(req, res) {
 }
 
 function handleRequest(req, res) {
-  const context = {};
   const userIsLoggedIn = checkLoginStatus(req, res);
   const needsOauth = req.query.code;
 
-  // if the request has a query code, then we need to go through the oauth, process
+  // if the request has a query code, then we need to go through the oauth process
   if (needsOauth) {
     handleOauth(req, res);
-  } else { // otherwise, the user is either logged in or not, in which case they can proceed
-    // console.log(res.get('Set-Cookie'));
-    // console.log('the user login status is: ' + userIsLoggedIn + '. and the path is ' + req.url);
+  } else {
+    const context = {};
+    const promiseArray = [];
+    // loop through the dataRoutes and build an array of
+    // all data fetching promises that need to be fulfilled
+    dataRoutes.forEach((route) => {
+      if (route.url === req.url) {
+        promiseArray.push(route.data()); // pushes promise onto the promise array
+      }
+    });
+    // once any required data has been retrieved, render the app and store
+    // the data on the context object used by StaticRouter
+    Promise.all(promiseArray)
+      .then((values) => {
+        context.data = values[0];
+        const html = ReactDomServer.renderToString(
+          <StaticRouter
+            location={req.url}
+            context={context}
+          >
+            <App userIsLoggedIn={userIsLoggedIn} />
+          </StaticRouter>,
+        );
 
-    // get the contents of the index.html file
-    const html = ReactDomServer.renderToString(
-      <StaticRouter
-        location={req.url}
-        context={context}
-      >
-        <App userIsLoggedIn={userIsLoggedIn} />
-      </StaticRouter>,
-    );
-
-    // render the App for the appropriate url path
-    if (context.url) { // HANDLE REDIRECTS
-      res.writeHead(302, { // use a 302 becuase it doesn't get cached
-        Location: context.url,
+        // render the App for the appropriate url path
+        if (context.url) { // HANDLE REDIRECTS
+          res.writeHead(302, { // use a 302 becuase it doesn't get cached
+            Location: context.url,
+          });
+          res.end();
+        } else {
+          res.render('index.nunj', { title: 'Festival Hopper', content: html, appData: context.data });
+        }
+      })
+      .catch((err) => {
+        console.error('something went wrong when retrieving data for server side rendering');
+        console.error(err);
       });
-      res.end();
-    } else {
-      res.render('index.nunj', { title: 'Festival Hopper', content: html });
-    }
   }
 }
 
 app.get('/api/curated-lists', (req, res) => {
   // get the lists from the database
-  MongoClient.connect(process.env.FH_MONGO_DB, (err, db) => {
-    if (err) {
-      console.log(err);
-    }
-    console.log(db);
-    db.collection('curatedlists').find().toArray((findErr, docs) => {
-      if (findErr) {
-        return console.log(findErr);
-      }
-      console.log('found the following records');
-      console.log(docs);
+  dbFunctions.getAllCuratedLists()
+    .then((docs) => {
       res.send(docs);
-      return res.end();
+      res.end();
+    })
+    .catch((err) => {
+      console.log('could not connect to database');
+      console.log(err);
     });
-    console.log('successfully connected to database server');
-  });
 });
 
 app.get('/*', handleRequest);

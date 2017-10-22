@@ -11,8 +11,10 @@ import '../styles/brewery-search.css';
 import '../styles/search.css';
 import '../styles/button.css';
 
+import 'isomorphic-fetch';
+
 class BrewerySearch extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       breweries: null,
@@ -20,13 +22,13 @@ class BrewerySearch extends Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  showModalSpinner(){
+  showModalSpinner() {
     this.setState({ waiting: true });
   }
-  hideModalSpinner(){
+  hideModalSpinner() {
     this.setState({ waiting: false });
   }
-  handleSubmit(e){
+  handleSubmit(e) {
     const self = this;
     e.preventDefault();
     // get the contents of search-field and use it to search
@@ -34,21 +36,22 @@ class BrewerySearch extends Component {
     if (breweryName.length > 0) {
       // build the fetch
       const searchUrl = utils.generateBrewerySearchUrl(breweryName);
+      console.log(searchUrl);
       let fetchResponse;
       self.showModalSpinner();
       fetch(searchUrl)
-        .then((response)=>{
+        .then((response) => {
           fetchResponse = response;
           return response.json();
         })
-        .then((json)=>{
+        .then((json) => {
           if (fetchResponse.status !== 200) {
-            console.error('The server responded with: ' + fetchResponse.status);
+            console.error(`The server responded with: ${fetchResponse.status}`);
             console.error(json.meta.error_detail);
           } else {
             console.log('call was successful');
             // log how many api calls you have left in the hour
-            console.log('Number of requests left are: ' + fetchResponse.headers['x-ratelimit-remaining']);
+            console.log(`Number of requests left are: ${fetchResponse.headers['x-ratelimit-remaining']}`);
             console.log(json);
             self.setState({
               breweries: utils.makeBreweryItems(json),
@@ -56,30 +59,30 @@ class BrewerySearch extends Component {
           }
           self.hideModalSpinner();
         })
-        .catch((err)=>{
+        .catch((err) => {
           console.error(err);
         });
     }
   }
-  render(){
+  render() {
     let breweries = null;
     if (this.state.breweries) {
       breweries = (
         <List items={this.state.breweries} type={Brewery} title="Breweries" />
-      )
+      );
     }
     let modalSpinner = null;
     if (_.isBoolean(this.state.waiting) && this.state.waiting) {
       modalSpinner = (
         <Modal>
-          <LoadingSpinner centered={true}/>
+          <LoadingSpinner centered />
         </Modal>
       );
     }
     return (
       <div className="brewerySearch">
         <form className="search" onSubmit={this.handleSubmit} noValidate>
-          <input className="search-field" type="text" name="brewery-name" placeholder="Search Breweries"/>
+          <input className="search-field" type="text" name="brewery-name" placeholder="Search Breweries" />
           <button className="search-btn btn btn--positive" type="submit">Submit</button>
         </form>
         { modalSpinner }

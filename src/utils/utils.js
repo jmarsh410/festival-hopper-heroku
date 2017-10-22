@@ -1,14 +1,15 @@
-/* jshint ignore:start */
+import Cookie from 'js-cookie';
 
-function normalizeBreweryBeers(json, bucket = 0){
+/* jshint ignore:start */
+function normalizeBreweryBeers(json, bucket = 0) {
   // code for undocumented api call
   const array = json.response.beers.items;
 
   // code for the documented api call
   // const array = json.response.brewery.beer_list.items;
 
-  let beers = [];
-  array.forEach(function(obj, i){
+  const beers = [];
+  array.forEach((obj, i) => {
     const normalizedBeer = {
       id: obj.beer.bid,
       name: obj.beer.beer_name,
@@ -19,7 +20,7 @@ function normalizeBreweryBeers(json, bucket = 0){
       isCheckedIn: false,
       isOpen: false,
       checked: false,
-      bucket: bucket,
+      bucket,
       index: i,
     };
     beers.push(normalizedBeer);
@@ -27,52 +28,58 @@ function normalizeBreweryBeers(json, bucket = 0){
   return beers;
 }
 
+function getAccessToken() {
+  return Cookie.get('untappd_access_token');
+}
+
 const utils = {
   generateId(size) {
-    if (typeof size !== 'number') {
-      size = 5;
-    }
-    var value = '',
-        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
-        length = chars.length;
-    for (var i = 0; i < size; ++i) {
+    const idSize = typeof size !== 'number'
+      ? size
+      : 5;
+    let value = '';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const length = chars.length;
+    for (let i = 0; i < idSize; i += 1) {
       value += chars.charAt(Math.floor(Math.random() * length));
     }
     return value;
   },
-  generateCheckInUrl(){
-    return 'https://api.untappd.com/v4/checkin/add?access_token=' + localStorage.userToken;
+  getAccessToken,
+  normalizeBreweryBeers,
+  generateCheckInUrl() {
+    return `https://api.untappd.com/v4/checkin/add?access_token=${getAccessToken()}`;
   },
   // lists the beers that a brewery has
-  generateBreweryInfoUrl(breweryId, offset = 0){
+  generateBreweryInfoUrl(breweryId, offset = 0) {
     // brewery/beer_list/BREWERY_ID
-    // there is an undocumented api endpoint that the untappd website uses which can be used to get a brewery's beers
+    // there is an undocumented api endpoint that the untappd website uses
+    // which can be used to get a brewery's beers
     // this endpoint is subject to removal/changes since it is undocumented
-    return 'https://api.untappd.com/v4/brewery/beer_list/' + breweryId + '?access_token=' + localStorage.userToken + '&offset=' + offset;
+    return `https://api.untappd.com/v4/brewery/beer_list/${breweryId}?access_token=${getAccessToken()}&offset=${offset}`;
 
     // documented api call https://untappd.com/api/docs#breweryinfo
-    // return 'https://api.untappd.com/v4/brewery/info/'+ breweryId + '?access_token=' + localStorage.userToken;
+    // return 'https://api.untappd.com/v4/brewery/info/'+ breweryId + '?access_token=' + getAccessToken();
   },
   // lists breweries that match the search term
-  generateBrewerySearchUrl(breweryName){
-    return 'https://api.untappd.com/v4/search/brewery/?access_token=' + localStorage.userToken + '&q=' + breweryName + '&limit=50';
+  generateBrewerySearchUrl(breweryName) {
+    return `https://api.untappd.com/v4/search/brewery/?access_token=${getAccessToken()}&q=${breweryName}&limit=50`;
   },
-  normalizeBreweryBeers,
-  makeBreweryBeerList(json, id){
+  makeBreweryBeerList(json, id) {
     const beers = normalizeBreweryBeers(json);
     // works off a previous list or creates a new one
     return {
-      id: id,
+      id,
       beers: [beers],
       checkCount: 0,
       maxItems: json.response.total_count,
       beerCount: beers.length,
     };
   },
-  makeBreweryItems(json){
+  makeBreweryItems(json) {
     // loop over each brewery and create an object for it, then return array of those objects
-    let breweries = [];
-    json.response.brewery.items.forEach(function(breweryObj){
+    const breweries = [];
+    json.response.brewery.items.forEach((breweryObj) => {
       // props: name, image, id
       const normalizedBrewery = {
         id: breweryObj.brewery.brewery_id,
@@ -82,6 +89,12 @@ const utils = {
       breweries.push(normalizedBrewery);
     });
     return breweries;
+  },
+  removeClientCookie(name) {
+    Cookie.remove('untappd_access_token');
+  },
+  isClientSide() {
+    return typeof window !== 'undefined';
   },
 };
 

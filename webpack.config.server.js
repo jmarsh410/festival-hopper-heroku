@@ -1,9 +1,9 @@
-var path = require('path');
-var nodeExternals = require('webpack-node-externals');
+const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   watch: true,
-  entry: './src/App.js',
+  entry: './src/App.jsx',
   target: 'node', // in order to ignore built-in modules like path, fs, etc.
   externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
   output: {
@@ -17,20 +17,23 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          'css-loader'
-        ]
+          'css-loader',
+        ],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
         use: [
-          'file-loader'
-        ]
+          'file-loader',
+        ],
       },
       {
-        test: /\.js/,
+        test: /\.(js|jsx)/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
-      }
-    ]
-  }
+        loader: 'babel-loader',
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['.js', '.json', '.jsx'],
+  },
 };

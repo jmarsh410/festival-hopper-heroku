@@ -1,12 +1,13 @@
 /* jshint ignore:start */
 
+import 'isomorphic-fetch';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Beer from './beer';
 import BeerListControls from './beer-list-controls';
 import List from './list';
 import utils from '../utils/utils';
-import DataLists from '../data-lists';
 import LoadingSpinner from './loading-spinner';
 import Modal from './modal';
 import Notification from './notification';
@@ -19,19 +20,19 @@ const apiCallInfo = {
     endpoint: utils.generateBreweryInfoUrl,
     normalizeData: utils.normalizeBreweryBeers,
     makeList: utils.makeBreweryBeerList,
-  }
+  },
 };
 
 const sortTerms = {
   'Brewery Name A-Z': 'brewery',
   'Beer Name A-Z': 'name',
-}
+};
 
 class BeerListContainer extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      list: { id: null, beers: null, checkCount: 0, totalCount: 0 },
+      list: { id: null, name: null, beers: null, checkCount: 0, totalCount: 0 },
       errors: [],
       isLoading: false,
       notifications: [],
@@ -54,70 +55,66 @@ class BeerListContainer extends Component {
       this.isAsync = true;
       this.needsFetch = true;
       this.apiEndpoint = apiCallInfo[this.listType].endpoint;
-      this.normalizeData = apiCallInfo[this.listType].normalizeData;  
-      this.makeList = apiCallInfo[this.listType].makeList;  
+      this.normalizeData = apiCallInfo[this.listType].normalizeData;
+      this.makeList = apiCallInfo[this.listType].makeList;
     }
   }
-  showLoadingSpinner(){
-    this.setState({ isLoading: true });
-  }
-  hideLoadingSpinner(){
-    this.setState({ isLoading: false });
-  }
-  showModalSpinner(){
+  showModalSpinner() {
     this.setState({ waiting: true });
   }
-  hideModalSpinner(){
+  hideModalSpinner() {
     this.setState({ waiting: false });
   }
-  addNotification(error){
-    this.setState((prevState)=>{
+  addNotification(error) {
+    this.setState((prevState) => {
       prevState.notifications.push(error);
       return { notifications: prevState.notifications };
     });
   }
-  clearNotifications(){
+  clearNotifications() {
     this.setState({
-      notifications: []
+      notifications: [],
     });
   }
-  handleScroll(e){
+  handleScroll() {
     // if this is the bottom of the page, then see if theres more items to be loaded
     const bottomOfPage = window.innerHeight + window.pageYOffset === document.body.scrollHeight;
     const moreItemsNeedLoaded = this.state.list.maxItems > this.state.list.beerCount;
-    if (bottomOfPage && moreItemsNeedLoaded){
-      this.fetchBeers(true);
+    if (bottomOfPage && moreItemsNeedLoaded) {
+      this.fetchBeersFromUntappd(true);
     }
   }
-  updateList(list){
+  updateList(list) {
     this.setState({
-      list: list
+      list,
     });
   }
-  updateStorage(list){
+  updateStorage(list) {
     // store beer list on localStorage
     localStorage[this.listId] = JSON.stringify(list);
   }
-  fetchBeers(add){
+  fetchBeersFromUntappd(add) {
     const self = this;
     // this.state.list.beers is an array of arrays
     const bucketNum = add ? this.state.list.beers.length : 0;
     const apiOffset = add ? bucketNum * this.defaultListSize : 0;
     this.clearNotifications();
     this.showLoadingSpinner();
+    console.log(`isClientSide: ${utils.isClientSide()}`);
+    console.log(fetch);
     fetch(this.apiEndpoint(this.listId, apiOffset))
-      .then((response)=>{
+      .then((response) => {
         if (response.status !== 200) {
-          self.addNotification({ id: utils.generateId(), text: 'Error: Server responded with status code of ' + response.status, type: 'error' });
-          return new Error('The server responded with a status code of' + response.status);
+          self.addNotification({ id: utils.generateId(), text: `Error: Server responded with status code of ${response.status}`, type: 'error' });
+          return new Error(`The server responded with a status code of ${response.status}`);
         }
         return response.json();
       })
-      .then((json)=>{
+      .then((json) => {
         console.log(json);
         if (add) {
           const newBeers = this.normalizeData(json, bucketNum);
-          this.setState((prevState)=>{
+          this.setState((prevState) => {
             prevState.list.beers.push(newBeers);
             prevState.list.beerCount += newBeers.length;
             return { list: prevState.list };
@@ -129,28 +126,36 @@ class BeerListContainer extends Component {
         }
         self.hideLoadingSpinner();
       })
-      .catch((err)=>{
+      .catch((err) => {
         self.addNotification({ id: utils.generateId(), text: err, type: 'error' });
         console.error(err);
       });
   }
-  getInitialBeers(){
-    if (!localStorage.userToken) {
-      return console.log('User is not logged in');
-    }
+  getInitialBeers() {
     // check localStorage for this list's beers
-    if (localStorage[this.listId]) {
+    if (localStorage[this.listId] && !_.isEmpty(localStorage[this.listId])) {
       this.updateList(JSON.parse(localStorage[this.listId]));
     } else {
-      // check whether this is a curated(stored) list or a list that needs an api call
+      // list isn't found in storage, make a fetch request for it
+      // check whether this is a curated list or a list that needs an api call
       if (this.listType === 'curated') {
-        // make sure the beers in the dataset are curated/normalized
-        // const list = utils.makeCuratedList(DataLists[this.listId], this.listId);
-        const list = DataLists[this.listId];
-        this.updateList(list);
+        // request the curated list from Festival Hopper's database
+        fetch(`http://${document.location.host}/api/beer-list/curated?listid=${this.listId}`)
+          .then((response) => {
+            if (response.status !== 200) {
+              console.error('could not get curated list');
+            }
+            return response.json();
+          })
+          .then((json) => {
+            this.updateList(json);
+          })
+          .catch((err) => {
+            console.error(error);
+          });
       } else {
         // if this list hasn't been saved, get it
-        this.fetchBeers();
+        this.fetchBeersFromUntappd();
       }
     }
   }
@@ -167,11 +172,11 @@ class BeerListContainer extends Component {
     const checkedboxes = listContainer.querySelectorAll('.beer:not(.checkedIn) .checkbox input:checked');
     let count = checkedboxes.length;
     self.showModalSpinner();
-    const done = function(){
+    const done = function() {
       // get rid of the spinner
       self.hideModalSpinner();
     };
-    const next = function(){
+    const next = function() {
       --count;
       if (count === 0) {
         done();
@@ -180,7 +185,7 @@ class BeerListContainer extends Component {
     // get the beers that are checked, but HAVENT been checked in yet
     // loop through the checked items and send a check in for each one
     this.clearNotifications();
-    checkedboxes.forEach((checkbox)=>{
+    checkedboxes.forEach((checkbox) => {
       const beer = checkbox.closest('.beer');
       const bucket = beer.getAttribute('data-bucket');
       const index = beer.getAttribute('data-index');
@@ -203,14 +208,14 @@ class BeerListContainer extends Component {
       const fetchOpts = {
         method: 'POST',
         body: formData,
-      }
+      };
       let fetchResponse;
       fetch(utils.generateCheckInUrl(), fetchOpts)
-        .then((response)=>{
+        .then((response) => {
           fetchResponse = response;
           return response.json();
         })
-        .then((json)=>{
+        .then((json) => {
           console.log(json);
           if (fetchResponse.status !== 200) {
             console.error('The server responded with: ' + fetchResponse.status);
@@ -221,7 +226,7 @@ class BeerListContainer extends Component {
             // log how many api calls you have left in the hour
             // this stopped working for some reason
             // console.log('Number of requests left are: ' + fetchResponse.headers['X-Ratelimit-Remaining']);
-            self.setState((prevState)=>{
+            self.setState((prevState) => {
               prevState.list.beers[bucket][index].isCheckedIn = true;
               // clear out the check count
               prevState.list.checkCount = 0;
@@ -234,17 +239,17 @@ class BeerListContainer extends Component {
           }
           next();
         })
-        .catch((err)=>{
+        .catch((err) => {
           self.addNotification({ id: utils.generateId(), text: err, type: 'error' });
           console.log(err);
           next();
         });
     });
   }
-  handleInputChange(e){
+  handleInputChange(e) {
     const target = e.target;
     // don't do anything if the beer has already been checkedIn
-    if (target.closest('.beer.checkedIn')){
+    if (target.closest('.beer.checkedIn')) {
       e.preventDefault();
       return;
     }
@@ -253,14 +258,14 @@ class BeerListContainer extends Component {
     const index = row.getAttribute('data-index');
     // make it a favorite
     if (target.closest('.beer-favorite')) {
-      this.setState((prevState)=>{
+      this.setState((prevState) => {
         prevState.list.beers[bucket][index].isFavorite = prevState.list.beers[bucket][index].isFavorite === true ? false : true;
         return { list: prevState.list };
       });
     }
     // check the beer
     if (target.closest('.beer-checkbox')) {
-      this.setState((prevState)=>{
+      this.setState((prevState) => {
         if (target.checked === true) {
           ++prevState.list.checkCount;
         } else {
@@ -272,26 +277,26 @@ class BeerListContainer extends Component {
     }
     // open the drawer
     if (target.closest('.beer-drawerToggle')) {
-      this.setState((prevState)=>{
+      this.setState((prevState) => {
         // reverse the openness property that is on the item 
         prevState.list.beers[bucket][index].isOpen = prevState.list.beers[bucket][index].isOpen === true ? false : true;
         return { list: prevState.list };
       });
     }
     if (target.classList.contains('beer-description')) {
-      this.setState((prevState)=>{
+      this.setState((prevState) => {
         prevState.list.beers[bucket][index].description = target.value;
         return { list: prevState.list };
       });
     }
     if (target.classList.contains('beer-slider')) {
-      this.setState((prevState)=>{
+      this.setState((prevState) => {
         prevState.list.beers[bucket][index].rating = target.value;
         return { list: prevState.list };
       });
     }
   }
-  handleSearchSubmit(e){
+  handleSearchSubmit(e) {
     e.preventDefault();
     // form element
     const searchTerm = e.target.querySelector('.search-field').value.toLowerCase().replace(' ', '');
@@ -299,18 +304,18 @@ class BeerListContainer extends Component {
       searchField: searchTerm,
     });
   }
-  handleSortChange(e){
+  handleSortChange(e) {
     const value = e.target.value;
     this.setState({
       sortField: value,
     });
   }
-  getFavoriteItems(){
-    return _.filter(this.getFilteredItems(), (item)=>{
+  getFavoriteItems() {
+    return _.filter(this.getFilteredItems(), (item) => {
       return item.isFavorite === true;
     });
   }
-  getFilteredItems(){
+  getFilteredItems() {
     var self = this;
     // filter the list based on current 'search' and 'sort' fields
     let beers = _.flatten(this.state.list.beers);
@@ -327,19 +332,29 @@ class BeerListContainer extends Component {
     }
     return beers;
   }
-  componentWillMount(){
-    // add a scroll event listener
-    window.addEventListener('scroll', this.handleScroll);
+  showLoadingSpinner() {
+    this.setState({ isLoading: true });
+  }
+  hideLoadingSpinner() {
+    this.setState({ isLoading: false });
+  }
+  componentWillMount() {
+    if (utils.isClientSide()) {
+      // add a scroll event listener
+      window.addEventListener('scroll', this.handleScroll);
+    }
     this.getInitialBeers();
   }
-  componentWillUnmount(){
-    // add a scroll event listener
-    window.removeEventListener('scroll', this.handleScroll);
+  componentWillUnmount() {
+    if (utils.isClientSide()) {
+      // add a scroll event listener
+      window.removeEventListener('scroll', this.handleScroll);
+    }
   }
-  render(){
+  render() {
     // const self = this;
     // update the beer list on localStorage each time the state changes
-    if (this.state.list.beers !== null){
+    if (this.state.list.beers !== null) {
       this.updateStorage(this.state.list);
     }
     // show the 'check-in' button if some of the beers are checkec
@@ -368,31 +383,52 @@ class BeerListContainer extends Component {
     if (_.isArray(this.state.notifications) && !_.isEmpty(this.state.notifications)) {
       modal = (
         <Modal onCloseClick={this.handleModalClick} close={true}>
-          <List type={Notification} items={this.state.notifications}/>
+          <List type={Notification} items={this.state.notifications} />
         </Modal>
       );
     }
     // waiting for beer list to generate, show loading spinner
     if (!_.isArray(this.state.list.beers)) {
       return (
-        <LoadingSpinner/>
+        <LoadingSpinner />
       );
     }
     return (
       <div className="beers">
         <BeerListControls>
-          <Search inputName="beer-search" placeholder="Search beer name..." handleSubmit={this.handleSearchSubmit}/>
-          <Select id="beers-sort" label="Sort By:" options={Object.keys(sortTerms)} handleChange={this.handleSortChange}/>
+          <Search inputName="beer-search" placeholder="Search beer name..." handleSubmit={this.handleSearchSubmit} />
+          <Select id="beers-sort" label="Sort By:" options={Object.keys(sortTerms)} handleChange={this.handleSortChange} />
         </BeerListControls>
-        <List title="Favorites" items={this.getFavoriteItems()} type={Beer} onChange={this.handleInputChange}/>
-        <List title={this.listId} items={this.getFilteredItems()} type={Beer} onChange={this.handleInputChange}/>
+        <List title="Favorites" items={this.getFavoriteItems()} type={Beer} onChange={this.handleInputChange} />
+        <List title={this.listId} items={this.getFilteredItems()} type={Beer} onChange={this.handleInputChange} />
         {loadingSpinner}
         {button}
         {modal}
         {waiting}
       </div>
-    )
+    ); 
   }
 }
+
+BeerListContainer.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.object,
+    isExact: PropTypes.bool,
+    path: PropTypes.string,
+    url: PropTypes.string,
+  }),
+  location: PropTypes.shape({
+    key: PropTypes.string,
+    pathname: PropTypes.string,
+    search: PropTypes.string,
+    hash: PropTypes.string,
+    state: PropTypes.object,
+  }),
+};
+
+BeerListContainer.defaultProps = {
+  match: {},
+  location: {},
+};
 
 export default BeerListContainer;

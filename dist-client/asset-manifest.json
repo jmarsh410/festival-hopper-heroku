@@ -2,5 +2,6 @@
   "main.css": "static/css/styles.css",
   "main.css.map": "static/css/styles.css.map",
   "main.js": "static/js/main.js",
+  "main.js.map": "static/js/main.js.map",
   "static/media/pbu_40_black.png": "static/media/pbu_40_black.png"
 }

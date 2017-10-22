@@ -61,7 +61,7 @@ exports["App"] =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 13);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -384,6 +384,12 @@ exports.default = List;
 
 /***/ }),
 /* 7 */
+/***/ (function(module, exports) {
+
+module.exports = require("prop-types");
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -397,7 +403,7 @@ exports.push([module.i, ".category {\n  display: block;\n  padding: 10px;\n  bac
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -462,7 +468,7 @@ var Modal = function (_Component) {
 exports.default = Modal;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -514,7 +520,7 @@ var LoadingSpinner = function (_Component) {
 exports.default = LoadingSpinner;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -528,13 +534,13 @@ exports.push([module.i, ".search {\n  display: flex;\n}\n.search-field {\n  flex
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = require("isomorphic-fetch");
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -552,19 +558,19 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-var _header = __webpack_require__(13);
+var _header = __webpack_require__(14);
 
 var _header2 = _interopRequireDefault(_header);
 
-var _nav = __webpack_require__(15);
+var _nav = __webpack_require__(16);
 
 var _nav2 = _interopRequireDefault(_nav);
 
-var _login = __webpack_require__(17);
+var _login = __webpack_require__(18);
 
 var _login2 = _interopRequireDefault(_login);
 
-var _categories = __webpack_require__(21);
+var _categories = __webpack_require__(22);
 
 var _categories2 = _interopRequireDefault(_categories);
 
@@ -692,7 +698,7 @@ var App = function (_Component) {
 exports.default = App;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -710,7 +716,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-__webpack_require__(14);
+__webpack_require__(15);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -759,7 +765,7 @@ var Header = function (_Component) {
 exports.default = Header;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -773,7 +779,7 @@ exports.push([module.i, ".header {\n  margin-bottom: 0px;\n  padding: 10px;\n  c
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -791,7 +797,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-__webpack_require__(16);
+__webpack_require__(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -848,7 +854,7 @@ var Nav = function (_Component) {
 exports.default = Nav;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -862,7 +868,7 @@ exports.push([module.i, ".nav ul {\n  display: flex;\n  margin: 0;\n  padding: 0
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -878,13 +884,13 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _buttonAnchor = __webpack_require__(18);
+var _buttonAnchor = __webpack_require__(19);
 
 var _buttonAnchor2 = _interopRequireDefault(_buttonAnchor);
 
-__webpack_require__(19);
+__webpack_require__(20);
 
-var _pbu_40_black = __webpack_require__(20);
+var _pbu_40_black = __webpack_require__(21);
 
 var _pbu_40_black2 = _interopRequireDefault(_pbu_40_black);
 
@@ -935,7 +941,7 @@ var Login = function (_Component) {
 exports.default = Login;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -988,7 +994,7 @@ var ButtonAnchor = function (_Component) {
 exports.default = ButtonAnchor;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1002,13 +1008,13 @@ exports.push([module.i, ".login {\n  position: absolute;\n  left: 0;\n  right: 0
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "458bbea78cc5bcb19cb3e7184c290db2.png";
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1024,7 +1030,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _propTypes = __webpack_require__(22);
+var _propTypes = __webpack_require__(7);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
@@ -1131,12 +1137,6 @@ Categories.defaultProps = {
 exports.default = Categories;
 
 /***/ }),
-/* 22 */
-/***/ (function(module, exports) {
-
-module.exports = require("prop-types");
-
-/***/ }),
 /* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1169,7 +1169,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-__webpack_require__(7);
+__webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1274,11 +1274,11 @@ var _brewery = __webpack_require__(28);
 
 var _brewery2 = _interopRequireDefault(_brewery);
 
-var _modal = __webpack_require__(8);
+var _modal = __webpack_require__(9);
 
 var _modal2 = _interopRequireDefault(_modal);
 
-var _loadingSpinner = __webpack_require__(9);
+var _loadingSpinner = __webpack_require__(10);
 
 var _loadingSpinner2 = _interopRequireDefault(_loadingSpinner);
 
@@ -1288,11 +1288,11 @@ var _utils2 = _interopRequireDefault(_utils);
 
 __webpack_require__(31);
 
-__webpack_require__(10);
+__webpack_require__(11);
 
 __webpack_require__(5);
 
-__webpack_require__(11);
+__webpack_require__(12);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1421,7 +1421,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-__webpack_require__(7);
+__webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1530,13 +1530,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-__webpack_require__(11);
+__webpack_require__(12);
 
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _propTypes = __webpack_require__(22);
+var _propTypes = __webpack_require__(7);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
@@ -1560,11 +1560,11 @@ var _utils = __webpack_require__(4);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var _loadingSpinner = __webpack_require__(9);
+var _loadingSpinner = __webpack_require__(10);
 
 var _loadingSpinner2 = _interopRequireDefault(_loadingSpinner);
 
-var _modal = __webpack_require__(8);
+var _modal = __webpack_require__(9);
 
 var _modal2 = _interopRequireDefault(_modal);
 
@@ -2415,7 +2415,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(10);
+__webpack_require__(11);
 
 __webpack_require__(5);
 

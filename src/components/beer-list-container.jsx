@@ -2,6 +2,7 @@
 
 import 'isomorphic-fetch';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Beer from './beer';
 import BeerListControls from './beer-list-controls';
@@ -31,7 +32,7 @@ class BeerListContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: { id: null, beers: null, checkCount: 0, totalCount: 0 },
+      list: { id: null, name: null, beers: null, checkCount: 0, totalCount: 0 },
       errors: [],
       isLoading: false,
       notifications: [],
@@ -80,7 +81,7 @@ class BeerListContainer extends Component {
     const bottomOfPage = window.innerHeight + window.pageYOffset === document.body.scrollHeight;
     const moreItemsNeedLoaded = this.state.list.maxItems > this.state.list.beerCount;
     if (bottomOfPage && moreItemsNeedLoaded) {
-      this.fetchBeers(true);
+      this.fetchBeersFromUntappd(true);
     }
   }
   updateList(list) {
@@ -92,7 +93,7 @@ class BeerListContainer extends Component {
     // store beer list on localStorage
     localStorage[this.listId] = JSON.stringify(list);
   }
-  fetchBeers(add) {
+  fetchBeersFromUntappd(add) {
     const self = this;
     // this.state.list.beers is an array of arrays
     const bucketNum = add ? this.state.list.beers.length : 0;
@@ -132,28 +133,29 @@ class BeerListContainer extends Component {
   }
   getInitialBeers() {
     // check localStorage for this list's beers
-    if (localStorage[this.listId]) {
+    if (localStorage[this.listId] && !_.isEmpty(localStorage[this.listId])) {
       this.updateList(JSON.parse(localStorage[this.listId]));
     } else {
-      // check whether this is a curated(stored) list or a list that needs an api call
+      // list isn't found in storage, make a fetch request for it
+      // check whether this is a curated list or a list that needs an api call
       if (this.listType === 'curated') {
-        // make sure the beers in the dataset are curated/normalized
-        // const list = utils.makeCuratedList(DataLists[this.listId], this.listId);
-        // const list = DataLists[this.listId];
-
-
-        // instead of finding the list inside the client codebase, request the beers from an endpoint, which will return the beers.
-        // let list = null;
-        // fetch(`/api/list/${listName}`)
-        //   .then((response) => {
-
-        //   })
-        //   .catch();
-
-        this.updateList(list);
+        // request the curated list from Festival Hopper's database
+        fetch(`http://${document.location.host}/api/beer-list/curated?listid=${this.listId}`)
+          .then((response) => {
+            if (response.status !== 200) {
+              console.error('could not get curated list');
+            }
+            return response.json();
+          })
+          .then((json) => {
+            this.updateList(json);
+          })
+          .catch((err) => {
+            console.error(error);
+          });
       } else {
         // if this list hasn't been saved, get it
-        this.fetchBeers();
+        this.fetchBeersFromUntappd();
       }
     }
   }
@@ -407,5 +409,26 @@ class BeerListContainer extends Component {
     ); 
   }
 }
+
+BeerListContainer.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.object,
+    isExact: PropTypes.bool,
+    path: PropTypes.string,
+    url: PropTypes.string,
+  }),
+  location: PropTypes.shape({
+    key: PropTypes.string,
+    pathname: PropTypes.string,
+    search: PropTypes.string,
+    hash: PropTypes.string,
+    state: PropTypes.object,
+  }),
+};
+
+BeerListContainer.defaultProps = {
+  match: {},
+  location: {},
+};
 
 export default BeerListContainer;

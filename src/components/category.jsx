@@ -6,7 +6,7 @@ import '../styles/category.css';
 
 class Category extends Component {
   render(){
-    const id = '/curated/' + this.props.data.name.replace(' ', '-').toLowerCase();
+    const id = '/curated/' + this.props.data.id;
     return (
       <Link to={{
         pathname: id

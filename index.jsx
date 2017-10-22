@@ -119,6 +119,19 @@ function handleRequest(req, res) {
   }
 }
 
+// get a specific beer list from the db
+app.get('/api/beer-list/curated', (req, res) => {
+  dbFunctions.getCuratedBeerList(req.query.listid)
+    .then((list) => {
+      res.send(list);
+      res.end();
+    })
+    .catch((err) => {
+      console.log('something went wrong when retrieving beer list');
+      console.log(err);
+    });
+});
+
 app.get('/api/curated-lists', (req, res) => {
   // get the lists from the database
   dbFunctions.getAllCuratedLists()
@@ -127,7 +140,7 @@ app.get('/api/curated-lists', (req, res) => {
       res.end();
     })
     .catch((err) => {
-      console.log('could not connect to database');
+      console.log('something went wrong when retrieving curated lists');
       console.log(err);
     });
 });

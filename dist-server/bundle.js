@@ -61,7 +61,7 @@ exports["App"] =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = 12);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -175,7 +175,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _jsCookie = __webpack_require__(24);
+var _jsCookie = __webpack_require__(25);
 
 var _jsCookie2 = _interopRequireDefault(_jsCookie);
 
@@ -321,7 +321,7 @@ var _lodash = __webpack_require__(3);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-__webpack_require__(22);
+__webpack_require__(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -386,12 +386,6 @@ exports.default = List;
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "458bbea78cc5bcb19cb3e7184c290db2.png";
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
 exports = module.exports = __webpack_require__(1)(undefined);
 // imports
 
@@ -403,7 +397,7 @@ exports.push([module.i, ".category {\n  display: block;\n  padding: 10px;\n  bac
 
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -423,7 +417,7 @@ var _lodash = __webpack_require__(3);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-__webpack_require__(28);
+__webpack_require__(29);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -468,7 +462,7 @@ var Modal = function (_Component) {
 exports.default = Modal;
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -484,7 +478,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(29);
+__webpack_require__(30);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -520,7 +514,7 @@ var LoadingSpinner = function (_Component) {
 exports.default = LoadingSpinner;
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -534,13 +528,13 @@ exports.push([module.i, ".search {\n  display: flex;\n}\n.search-field {\n  flex
 
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = require("isomorphic-fetch");
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -558,15 +552,15 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-var _header = __webpack_require__(14);
+var _header = __webpack_require__(13);
 
 var _header2 = _interopRequireDefault(_header);
 
-var _nav = __webpack_require__(16);
+var _nav = __webpack_require__(15);
 
 var _nav2 = _interopRequireDefault(_nav);
 
-var _login = __webpack_require__(18);
+var _login = __webpack_require__(17);
 
 var _login2 = _interopRequireDefault(_login);
 
@@ -574,11 +568,11 @@ var _categories = __webpack_require__(21);
 
 var _categories2 = _interopRequireDefault(_categories);
 
-var _brewerySearch = __webpack_require__(26);
+var _brewerySearch = __webpack_require__(27);
 
 var _brewerySearch2 = _interopRequireDefault(_brewerySearch);
 
-var _beerListContainer = __webpack_require__(31);
+var _beerListContainer = __webpack_require__(32);
 
 var _beerListContainer2 = _interopRequireDefault(_beerListContainer);
 
@@ -663,14 +657,26 @@ var App = function (_Component) {
           _react2.default.createElement(_reactRouterDom.Route, {
             path: '/logout',
             render: function render() {
-              // delete the user token from the cookie
-              if (typeof localStorage !== 'undefined') {
+              // delete the user's access token cookie
+              if (_utils2.default.isClientSide()) {
                 _utils2.default.removeClientCookie('untappd_access_token');
               }
               return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
             }
           }),
-          _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/curated', component: _categories2.default }),
+          _react2.default.createElement(_reactRouterDom.Route, {
+            exact: true,
+            path: '/curated',
+            render: function render(_ref) {
+              var staticContext = _ref.staticContext;
+
+              if (staticContext && staticContext.data && staticContext.data.categories) {
+                // during SSR, pass in category data directly
+                return _react2.default.createElement(_categories2.default, { items: staticContext.data.categories });
+              }
+              return _react2.default.createElement(_categories2.default, null);
+            }
+          }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '/curated/:listId', component: _beerListContainer2.default }),
           _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/brewery-search', component: _brewerySearch2.default }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '/brewery/:listId', component: _beerListContainer2.default }),
@@ -686,7 +692,7 @@ var App = function (_Component) {
 exports.default = App;
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -704,7 +710,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-__webpack_require__(15);
+__webpack_require__(14);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -753,7 +759,7 @@ var Header = function (_Component) {
 exports.default = Header;
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -767,7 +773,7 @@ exports.push([module.i, ".header {\n  margin-bottom: 0px;\n  padding: 10px;\n  c
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -785,7 +791,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-__webpack_require__(17);
+__webpack_require__(16);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -842,7 +848,7 @@ var Nav = function (_Component) {
 exports.default = Nav;
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -856,7 +862,7 @@ exports.push([module.i, ".nav ul {\n  display: flex;\n  margin: 0;\n  padding: 0
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -872,13 +878,13 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _buttonAnchor = __webpack_require__(19);
+var _buttonAnchor = __webpack_require__(18);
 
 var _buttonAnchor2 = _interopRequireDefault(_buttonAnchor);
 
-__webpack_require__(20);
+__webpack_require__(19);
 
-var _pbu_40_black = __webpack_require__(7);
+var _pbu_40_black = __webpack_require__(20);
 
 var _pbu_40_black2 = _interopRequireDefault(_pbu_40_black);
 
@@ -929,7 +935,7 @@ var Login = function (_Component) {
 exports.default = Login;
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -982,7 +988,7 @@ var ButtonAnchor = function (_Component) {
 exports.default = ButtonAnchor;
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -994,6 +1000,12 @@ exports.push([module.i, ".login {\n  position: absolute;\n  left: 0;\n  right: 0
 
 // exports
 
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "458bbea78cc5bcb19cb3e7184c290db2.png";
 
 /***/ }),
 /* 21 */
@@ -1012,23 +1024,23 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = __webpack_require__(22);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 var _list = __webpack_require__(6);
 
 var _list2 = _interopRequireDefault(_list);
 
-var _category = __webpack_require__(23);
+var _category = __webpack_require__(24);
 
 var _category2 = _interopRequireDefault(_category);
-
-var _pbu_40_black = __webpack_require__(7);
-
-var _pbu_40_black2 = _interopRequireDefault(_pbu_40_black);
 
 var _utils = __webpack_require__(4);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-__webpack_require__(25);
+__webpack_require__(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1036,34 +1048,71 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* jshint ignore:start */
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 // css
 
 
-var Items = [{
-  id: _utils2.default.generateId(),
-  name: 'Index Fest',
-  location: 'Austin Statesman',
-  img: _pbu_40_black2.default
-}];
-
 var Categories = function (_Component) {
   _inherits(Categories, _Component);
 
-  function Categories() {
+  function Categories(props) {
     _classCallCheck(this, Categories);
 
-    return _possibleConstructorReturn(this, (Categories.__proto__ || Object.getPrototypeOf(Categories)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (Categories.__proto__ || Object.getPrototypeOf(Categories)).call(this, props));
+
+    var items = void 0;
+    // if items were specifically passed in, use them
+    if (_this.props.items.length > 0) {
+      items = _this.props.items;
+    } else if (_utils2.default.isClientSide() && window && window.appData && window.appData.categories) {
+      // look for items stored in appData
+      items = window.appData.categories;
+    } else {
+      items = [];
+    }
+    _this.state = {
+      items: items
+    };
+    return _this;
   }
 
   _createClass(Categories, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      var _this2 = this;
+
+      if (_utils2.default.isClientSide() && this.state.items < 1) {
+        var url = 'http://' + document.location.host + '/api/curated-lists';
+        fetch(url).then(function (response) {
+          if (response.status !== 200) {
+            console.error('could not get curated lists');
+          }
+          return response.json();
+        }).then(function (json) {
+          _this2.items = json;
+          console.log(json);
+          _this2.setState({ items: json });
+        }).catch(function (err) {
+          console.log('something went wrong with the categories fetch');
+          console.log(err);
+        });
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
+      if (this.state.items.length < 1) {
+        return _react2.default.createElement(
+          'div',
+          null,
+          '...loading'
+        );
+      }
       return _react2.default.createElement(
         'div',
         { className: 'categories' },
-        _react2.default.createElement(_list2.default, { items: Items, type: _category2.default, title: 'Curated Lists' })
+        _react2.default.createElement(_list2.default, { items: this.state.items, type: _category2.default, title: 'Curated Lists' })
       );
     }
   }]);
@@ -1071,10 +1120,24 @@ var Categories = function (_Component) {
   return Categories;
 }(_react.Component);
 
+Categories.propTypes = {
+  items: _propTypes2.default.arrayOf(_propTypes2.default.object)
+};
+
+Categories.defaultProps = {
+  items: []
+};
+
 exports.default = Categories;
 
 /***/ }),
 /* 22 */
+/***/ (function(module, exports) {
+
+module.exports = require("prop-types");
+
+/***/ }),
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1088,7 +1151,7 @@ exports.push([module.i, ".list-title {\n  font-family: var(--title-font-family);
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1106,7 +1169,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-__webpack_require__(8);
+__webpack_require__(7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1128,7 +1191,7 @@ var Category = function (_Component) {
   _createClass(Category, [{
     key: 'render',
     value: function render() {
-      var id = '/curated/' + this.props.data.name.replace(' ', '-').toLowerCase();
+      var id = '/curated/' + this.props.data.id;
       return _react2.default.createElement(
         _reactRouterDom.Link,
         { to: {
@@ -1137,7 +1200,7 @@ var Category = function (_Component) {
         _react2.default.createElement(
           'div',
           { className: 'category-image' },
-          _react2.default.createElement('img', { src: this.props.data.img, alt: this.props.data.name })
+          _react2.default.createElement('img', { src: this.props.data.image, alt: this.props.data.name })
         ),
         _react2.default.createElement(
           'div',
@@ -1163,13 +1226,13 @@ var Category = function (_Component) {
 exports.default = Category;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = require("js-cookie");
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1183,7 +1246,7 @@ exports.push([module.i, ".categories-separator {\n  text-align: center;\n  margi
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1207,15 +1270,15 @@ var _list = __webpack_require__(6);
 
 var _list2 = _interopRequireDefault(_list);
 
-var _brewery = __webpack_require__(27);
+var _brewery = __webpack_require__(28);
 
 var _brewery2 = _interopRequireDefault(_brewery);
 
-var _modal = __webpack_require__(9);
+var _modal = __webpack_require__(8);
 
 var _modal2 = _interopRequireDefault(_modal);
 
-var _loadingSpinner = __webpack_require__(10);
+var _loadingSpinner = __webpack_require__(9);
 
 var _loadingSpinner2 = _interopRequireDefault(_loadingSpinner);
 
@@ -1223,13 +1286,13 @@ var _utils = __webpack_require__(4);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-__webpack_require__(30);
+__webpack_require__(31);
 
-__webpack_require__(11);
+__webpack_require__(10);
 
 __webpack_require__(5);
 
-__webpack_require__(12);
+__webpack_require__(11);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1340,7 +1403,7 @@ var BrewerySearch = function (_Component) {
 exports.default = BrewerySearch;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1358,7 +1421,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(2);
 
-__webpack_require__(8);
+__webpack_require__(7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1413,7 +1476,7 @@ var Brewery = function (_Component) {
 exports.default = Brewery;
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1427,7 +1490,7 @@ exports.push([module.i, ".modalContainer {\n  position: fixed;\n  top: 0;\n  lef
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1441,7 +1504,7 @@ exports.push([module.i, "@keyframes spin {\n  0% {\n    transform: rotate(0deg);
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1455,7 +1518,7 @@ exports.push([module.i, ".brewerySearch {\n  margin-top: 4%;\n}", ""]);
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1467,19 +1530,25 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+__webpack_require__(11);
+
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(22);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _lodash = __webpack_require__(3);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _beer = __webpack_require__(32);
+var _beer = __webpack_require__(33);
 
 var _beer2 = _interopRequireDefault(_beer);
 
-var _beerListControls = __webpack_require__(36);
+var _beerListControls = __webpack_require__(37);
 
 var _beerListControls2 = _interopRequireDefault(_beerListControls);
 
@@ -1491,31 +1560,25 @@ var _utils = __webpack_require__(4);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var _dataLists = __webpack_require__(38);
-
-var _dataLists2 = _interopRequireDefault(_dataLists);
-
-var _loadingSpinner = __webpack_require__(10);
+var _loadingSpinner = __webpack_require__(9);
 
 var _loadingSpinner2 = _interopRequireDefault(_loadingSpinner);
 
-var _modal = __webpack_require__(9);
+var _modal = __webpack_require__(8);
 
 var _modal2 = _interopRequireDefault(_modal);
 
-var _notification = __webpack_require__(40);
+var _notification = __webpack_require__(39);
 
 var _notification2 = _interopRequireDefault(_notification);
 
-var _search = __webpack_require__(42);
+var _search = __webpack_require__(41);
 
 var _search2 = _interopRequireDefault(_search);
 
-var _select = __webpack_require__(43);
+var _select = __webpack_require__(42);
 
 var _select2 = _interopRequireDefault(_select);
-
-__webpack_require__(12);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1548,7 +1611,7 @@ var BeerListContainer = function (_Component) {
     var _this = _possibleConstructorReturn(this, (BeerListContainer.__proto__ || Object.getPrototypeOf(BeerListContainer)).call(this, props));
 
     _this.state = {
-      list: { id: null, beers: null, checkCount: 0, totalCount: 0 },
+      list: { id: null, name: null, beers: null, checkCount: 0, totalCount: 0 },
       errors: [],
       isLoading: false,
       notifications: [],
@@ -1578,16 +1641,6 @@ var BeerListContainer = function (_Component) {
   }
 
   _createClass(BeerListContainer, [{
-    key: 'showLoadingSpinner',
-    value: function showLoadingSpinner() {
-      this.setState({ isLoading: true });
-    }
-  }, {
-    key: 'hideLoadingSpinner',
-    value: function hideLoadingSpinner() {
-      this.setState({ isLoading: false });
-    }
-  }, {
     key: 'showModalSpinner',
     value: function showModalSpinner() {
       this.setState({ waiting: true });
@@ -1614,12 +1667,12 @@ var BeerListContainer = function (_Component) {
     }
   }, {
     key: 'handleScroll',
-    value: function handleScroll(e) {
+    value: function handleScroll() {
       // if this is the bottom of the page, then see if theres more items to be loaded
       var bottomOfPage = window.innerHeight + window.pageYOffset === document.body.scrollHeight;
       var moreItemsNeedLoaded = this.state.list.maxItems > this.state.list.beerCount;
       if (bottomOfPage && moreItemsNeedLoaded) {
-        this.fetchBeers(true);
+        this.fetchBeersFromUntappd(true);
       }
     }
   }, {
@@ -1636,8 +1689,8 @@ var BeerListContainer = function (_Component) {
       localStorage[this.listId] = JSON.stringify(list);
     }
   }, {
-    key: 'fetchBeers',
-    value: function fetchBeers(add) {
+    key: 'fetchBeersFromUntappd',
+    value: function fetchBeersFromUntappd(add) {
       var _this2 = this;
 
       var self = this;
@@ -1651,7 +1704,7 @@ var BeerListContainer = function (_Component) {
       fetch(this.apiEndpoint(this.listId, apiOffset)).then(function (response) {
         if (response.status !== 200) {
           self.addNotification({ id: _utils2.default.generateId(), text: 'Error: Server responded with status code of ' + response.status, type: 'error' });
-          return new Error('The server responded with a status code of' + response.status);
+          return new Error('The server responded with a status code of ' + response.status);
         }
         return response.json();
       }).then(function (json) {
@@ -1677,19 +1730,29 @@ var BeerListContainer = function (_Component) {
   }, {
     key: 'getInitialBeers',
     value: function getInitialBeers() {
+      var _this3 = this;
+
       // check localStorage for this list's beers
-      if (localStorage[this.listId]) {
+      if (localStorage[this.listId] && !_lodash2.default.isEmpty(localStorage[this.listId])) {
         this.updateList(JSON.parse(localStorage[this.listId]));
       } else {
-        // check whether this is a curated(stored) list or a list that needs an api call
+        // list isn't found in storage, make a fetch request for it
+        // check whether this is a curated list or a list that needs an api call
         if (this.listType === 'curated') {
-          // make sure the beers in the dataset are curated/normalized
-          // const list = utils.makeCuratedList(DataLists[this.listId], this.listId);
-          var list = _dataLists2.default[this.listId];
-          this.updateList(list);
+          // request the curated list from Festival Hopper's database
+          fetch('http://' + document.location.host + '/api/beer-list/curated?listid=' + this.listId).then(function (response) {
+            if (response.status !== 200) {
+              console.error('could not get curated list');
+            }
+            return response.json();
+          }).then(function (json) {
+            _this3.updateList(json);
+          }).catch(function (err) {
+            console.error(error);
+          });
         } else {
           // if this list hasn't been saved, get it
-          this.fetchBeers();
+          this.fetchBeersFromUntappd();
         }
       }
     }
@@ -1878,6 +1941,16 @@ var BeerListContainer = function (_Component) {
       return beers;
     }
   }, {
+    key: 'showLoadingSpinner',
+    value: function showLoadingSpinner() {
+      this.setState({ isLoading: true });
+    }
+  }, {
+    key: 'hideLoadingSpinner',
+    value: function hideLoadingSpinner() {
+      this.setState({ isLoading: false });
+    }
+  }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
       if (_utils2.default.isClientSide()) {
@@ -1961,10 +2034,31 @@ var BeerListContainer = function (_Component) {
   return BeerListContainer;
 }(_react.Component);
 
+BeerListContainer.propTypes = {
+  match: _propTypes2.default.shape({
+    params: _propTypes2.default.object,
+    isExact: _propTypes2.default.bool,
+    path: _propTypes2.default.string,
+    url: _propTypes2.default.string
+  }),
+  location: _propTypes2.default.shape({
+    key: _propTypes2.default.string,
+    pathname: _propTypes2.default.string,
+    search: _propTypes2.default.string,
+    hash: _propTypes2.default.string,
+    state: _propTypes2.default.object
+  })
+};
+
+BeerListContainer.defaultProps = {
+  match: {},
+  location: {}
+};
+
 exports.default = BeerListContainer;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1980,11 +2074,11 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _checkbox = __webpack_require__(33);
+var _checkbox = __webpack_require__(34);
 
 var _checkbox2 = _interopRequireDefault(_checkbox);
 
-__webpack_require__(35);
+__webpack_require__(36);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2087,7 +2181,7 @@ var Beer = function (_Component) {
 exports.default = Beer;
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2103,7 +2197,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(34);
+__webpack_require__(35);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2141,7 +2235,7 @@ var Checkbox = function (_Component) {
 exports.default = Checkbox;
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -2155,7 +2249,7 @@ exports.push([module.i, ".checkbox {\n  position: relative;\n}\n.checkbox-input 
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -2169,7 +2263,7 @@ exports.push([module.i, ".beers {\n  margin-bottom: 100px;\n}\n/*.beer.checkedIn
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2185,7 +2279,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(37);
+__webpack_require__(38);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2221,7 +2315,7 @@ var BeerListControls = function (_Component) {
 exports.default = BeerListControls;
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -2235,43 +2329,7 @@ exports.push([module.i, ".beerListControls {\n  display: flex;\n  align-items: c
 
 
 /***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _indexFest = __webpack_require__(39);
-
-var _indexFest2 = _interopRequireDefault(_indexFest);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// key names must match the corresponding :listId url parameter
-var DataLists = {
-  'index-fest': _indexFest2.default
-};
-exports.default = DataLists;
-
-/***/ }),
 /* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var index = { "id": "index", "beers": [[{ "id": 1181221, "name": "IPA", "brewery": "Oskar Blues Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1181221_ee813_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 0 }, { "id": 5912, "name": "420 Extra Pale Ale", "brewery": "SweetWater Brewing Company ", "image": "https://untappd.akamaized.net/site/beer_logos/beer-5912_11c77_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 1 }, { "id": 1512388, "name": "Tangerine Express IPA", "brewery": "Stone Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1512388_beecb_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 2 }, { "id": 1961981, "name": "Cool Breeze", "brewery": "SweetWater Brewing Company ", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1961981_b5b4e_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 3 }, { "id": 1637314, "name": "Lil' Hop Session IPA", "brewery": "Treaty Oak", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 4 }, { "id": 1424308, "name": "Goin' Coastal", "brewery": "SweetWater Brewing Company ", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1424308_37aa5_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 5 }, { "id": 25717, "name": "Thirsty Goat Amber", "brewery": "Thirsty Planet Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-25717_e9c12_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 6 }, { "id": 7053, "name": "IPA", "brewery": "SweetWater Brewing Company ", "image": "https://untappd.akamaized.net/site/beer_logos/beer-7053_4f710_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 7 }, { "id": 1394476, "name": "Pulled Porter (Dank Tank)", "brewery": "SweetWater Brewing Company ", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1394476_edeaa_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 8 }, { "id": 1286598, "name": "Double Bastard in the Rye", "brewery": "Arrogant Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1286598_4d8e1_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 9 }, { "id": 1933139, "name": "Stone Jindia Pale Ale", "brewery": "Stone Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1933139_2c06a_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 10 }, { "id": 45660, "name": "Chigoatlé Amber", "brewery": "Thirsty Planet Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 11 }, { "id": 2021012, "name": "Maine / Stone Dayslayer (2017)", "brewery": "Stone Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-2021012_2832d_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 12 }, { "id": 34309, "name": "Buckethead IPA", "brewery": "Thirsty Planet Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-34309_7dde7_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 13 }, { "id": 136850, "name": "Chupahopra", "brewery": "Twisted X Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-136850_2cd3d_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 14 }, { "id": 11821, "name": "Grande Réserve 17", "brewery": "Unibroue", "image": "https://untappd.akamaized.net/site/beer_logos/beer-Unibroue17_11821.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 15 }, { "id": 1096244, "name": "Lazy Day Lager", "brewery": "Uncle Billy's Brewery", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 16 }, { "id": 1046722, "name": "Sour Monkey", "brewery": "Victory Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1046722_0a795_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 17 }, { "id": 289064, "name": "The Green Room IPA", "brewery": "Uncle Billy's Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-289064_9d212_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 18 }, { "id": 2023539, "name": "Lust For Life Scotch Ale W/ Poppy", "brewery": "Uncle Billy's Brewery", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 19 }, { "id": 3787, "name": "Golden Monkey", "brewery": "Victory Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-3787_3bf47_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 20 }, { "id": 6988, "name": "La Fin Du Monde", "brewery": "Unibroue", "image": "https://untappd.akamaized.net/site/beer_logos/beer-6988_a1ad3_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 21 }, { "id": 1930151, "name": "Blackboard Series (no. 05) Cream Ale With Cold Brew Coffee", "brewery": "Victory Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1930151_07b33_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 22 }, { "id": 83450, "name": "Cow Creek", "brewery": "Twisted X Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-83450_1e1a2_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 23 }, { "id": 1866223, "name": "Hye-Biscus", "brewery": "Twisted X Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 24 }, { "id": 1785500, "name": "Midnight Magician", "brewery": "Twisted X Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 25 }, { "id": 1206045, "name": "Later Days", "brewery": "Twisted X Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1206045_76313_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 26 }, { "id": 18545, "name": "Summer Love", "brewery": "Victory Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-18545_7bc75_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 27 }, { "id": 1902011, "name": "Fitzhugh Mild Ale", "brewery": "Treaty Oak Brewing", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 28 }, { "id": 1511457, "name": "Austin Lager", "brewery": "Twisted X Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1511457_128ee_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 29 }, { "id": 1902009, "name": "Brightside Blonde Ale", "brewery": "Treaty Oak Brewing", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 30 }, { "id": 1589149, "name": "À Tout Le Monde", "brewery": "Unibroue", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1589149_cad89_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 31 }, { "id": 2023768, "name": "Éphémère Sureau (Elderberry)", "brewery": "Unibroue", "image": "https://untappd.akamaized.net/site/beer_logos/beer-2023768_6be9f_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 32 }, { "id": 236773, "name": "Duvel Rustica", "brewery": "Brewery Ommegang", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_236773_c9719fd0c02e934153d2571083ef.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 33 }, { "id": 164088, "name": "LOBO Texas Lager", "brewery": "Pedernales Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_164088_sm_970c4b622a4ddb10911a938f5af769.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 34 }, { "id": 1218448, "name": "Beerito", "brewery": "Oskar Blues Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1218448_55c4b_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 35 }, { "id": 1663706, "name": "Bitter Battle APA", "brewery": "Pedernales Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1663706_8f803_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 36 }, { "id": 172161, "name": "Revolver Bock", "brewery": "Revolver Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-Bock_172161.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 37 }, { "id": 6119, "name": "Witte", "brewery": "Brewery Ommegang", "image": "https://untappd.akamaized.net/site/beer_logos/beer-6119_0d6ba_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 38 }, { "id": 228839, "name": "High Brass", "brewery": "Revolver Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-HighBrass_228839.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 39 }, { "id": 1855181, "name": "Joe's Magical Pills", "brewery": "Pinthouse Pizza", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 40 }, { "id": 711159, "name": "Thrilla In Brazilla", "brewery": "Peticolas Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-711159_9e071_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 41 }, { "id": 2068003, "name": "Fugli", "brewery": "Oskar Blues Brewery", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 42 }, { "id": 381032, "name": "Burro's Breakfast", "brewery": "Pinthouse Pizza", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_381032_sm_4fb33d751149f6a9454d02a674f1e6.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 43 }, { "id": 1750393, "name": "Robert Earl Keen Front Porch Amber Ale", "brewery": "Pedernales Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 44 }, { "id": 1885271, "name": "Zappy Squid", "brewery": "Pinthouse Pizza", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 45 }, { "id": 63554, "name": "Velvet Hammer", "brewery": "Peticolas Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-VelvetHammer_63554.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 46 }, { "id": 1618674, "name": "Fruition", "brewery": "Brewery Ommegang", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1618674_99e6b_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 47 }, { "id": 33689, "name": "Texas Red", "brewery": "Rahr & Sons Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_33689_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 48 }, { "id": 317342, "name": "Old Beluga", "brewery": "Pinthouse Pizza", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 49 }, { "id": 1290350, "name": "Electric Jellyfish", "brewery": "Pinthouse Pizza", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 50 }, { "id": 230709, "name": "Ironhead IPA", "brewery": "Revolver Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-IronheadIPA_230709.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 51 }, { "id": 841832, "name": "Sangre Y Miel", "brewery": "Revolver Brewing", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 52 }, { "id": 706376, "name": "Fracker Barrel One", "brewery": "Revolver Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-706376_d56f0_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 53 }, { "id": 172056, "name": "Blood & Honey", "brewery": "Revolver Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-172056_21cfd_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 54 }, { "id": 1517506, "name": "Great Beyond", "brewery": "Brewery Ommegang", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1517506_bdbcb_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 55 }, { "id": 912790, "name": "Pinner Throwback IPA", "brewery": "Oskar Blues Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-912790_13346_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 56 }, { "id": 10759, "name": "Dale's Pale Ale", "brewery": "Oskar Blues Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-dalesPaleAle.jpg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 57 }, { "id": 1105309, "name": "Anodyne", "brewery": "Revolver Brewing", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 58 }, { "id": 395436, "name": "Rapture", "brewery": "Rabbit Hole Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-395436_61c43_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 59 }, { "id": 446746, "name": "Sit Down Or I'll Sit You Down", "brewery": "Peticolas Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_446746_sm_61459e8fa5962dfbd26cd6edf22394.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 60 }, { "id": 1911780, "name": "JabberBOCK", "brewery": "Rabbit Hole Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1911780_0a101_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 61 }, { "id": 199948, "name": "Sidewinder", "brewery": "Revolver Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-Sidewinder_199948.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 62 }, { "id": 1789346, "name": "Handlebier", "brewery": "Pinthouse Pizza", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 63 }, { "id": 1236923, "name": "Rosetta", "brewery": "Brewery Ommegang", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1236923_5044b_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 64 }, { "id": 1367875, "name": "The Mandarin", "brewery": "Revolver Brewing", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 65 }, { "id": 805959, "name": "Off With Your Red", "brewery": "Rabbit Hole Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-805959_9d3d6_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 66 }, { "id": 1648399, "name": "Full-Tang IPA", "brewery": "Revolver Brewing", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 67 }, { "id": 2018352, "name": "Big & Bright IPA", "brewery": "Karbach Brewing Co", "image": "https://untappd.akamaized.net/site/beer_logos/beer-2018352_2ac6f_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 68 }, { "id": 73130, "name": "Hopadillo IPA", "brewery": "Karbach Brewing Co", "image": "https://untappd.akamaized.net/site/beer_logos/beer-HopadilloIPA_73130.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 69 }, { "id": 285993, "name": "Weekend Warrior", "brewery": "Karbach Brewing Co", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_285993_eea46e222396a59a85d530d0bfb6.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 70 }, { "id": 340846, "name": "Love Street", "brewery": "Karbach Brewing Co", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_340846_sm_85befe468096d0fd5914e1a26b22da.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 71 }, { "id": 1009713, "name": "Staycation", "brewery": "Karbach Brewing Co", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1009713_8f74e_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 72 }, { "id": 80229, "name": "Rodeo Clown Double IPA", "brewery": "Karbach Brewing Co", "image": "https://untappd.akamaized.net/site/beer_logos/beer-RodeoClownDoubleIPA_80229.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 73 }, { "id": 1966526, "name": "Lemon And Ginger Radler", "brewery": "Karbach Brewing Co", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1966526_90e61_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 74 }, { "id": 75531, "name": "Weisse Versa Wheat", "brewery": "Karbach Brewing Co", "image": "https://untappd.akamaized.net/site/beer_logos/beer-WeisseVersaWheat_75531.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 75 }, { "id": 262533, "name": "Alamo Golden Ale", "brewery": "Alamo Beer Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_262533_sm_20c5a441622d6f010cc6137fbbb3af.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 76 }, { "id": 2007437, "name": "Lager", "brewery": "Altstadt Brewery", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 77 }, { "id": 450088, "name": "Stingo", "brewery": "(512) Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 78 }, { "id": 2011758, "name": "Fiestival", "brewery": "Alamo Beer Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 79 }, { "id": 4084, "name": "Smoked Porter", "brewery": "Alaskan Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-4084_2b271_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 80 }, { "id": 580023, "name": "All Call", "brewery": "Lakewood Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-580023_5309c_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 81 }, { "id": 8324, "name": "Stash IPA", "brewery": "Independence Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-8324_4da9b_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 82 }, { "id": 1476222, "name": "SMaSH#4 - Cashmere IPA", "brewery": "(512) Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 83 }, { "id": 1531123, "name": "Liberty Lunch", "brewery": "Independence Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1531123_707fd_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 84 }, { "id": 2019291, "name": "Vintage Nun (2017)", "brewery": "Adelbert's Brewery", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 85 }, { "id": 60844, "name": "Lakewood Lager", "brewery": "Lakewood Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-60844_95eb6_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 86 }, { "id": 1930831, "name": "Buzzbait Blonde", "brewery": "Adelbert's Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1930831_3fc08_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 87 }, { "id": 1246420, "name": "Space Bloody Orange", "brewery": "Ace Cider (The California Cider Company)", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1246420_22f0a_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 88 }, { "id": 84251, "name": "Crisp Apple", "brewery": "Angry Orchard Cider Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-CrispApple_84251.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 89 }, { "id": 347375, "name": "Till & Toil", "brewery": "Lakewood Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-347375_cef82_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 90 }, { "id": 581892, "name": "Raspberry Temptress", "brewery": "Lakewood Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-581892_25794_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 91 }, { "id": 52332, "name": "The Temptress", "brewery": "Lakewood Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-52332_42777_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 92 }, { "id": 3603, "name": "Ace Perry Cider", "brewery": "Ace Cider (The California Cider Company)", "image": "https://untappd.akamaized.net/site/beer_logos/beer-AcePerryCider_3603.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 93 }, { "id": 1276863, "name": "Mango Wit", "brewery": "Adelbert's Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1276863_efaa9_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 94 }, { "id": 1000595, "name": "Amber Lager", "brewery": "Alamo Beer Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1000595_82f87_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 95 }, { "id": 1024472, "name": "Redbud Berliner Weisse", "brewery": "Independence Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1024472_4469d_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 96 }, { "id": 4086, "name": "Summer Ale", "brewery": "Alaskan Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-4086_1b5c0_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 97 }, { "id": 761232, "name": "Power & Light", "brewery": "Independence Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-761232_46be2_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 98 }, { "id": 421931, "name": "White Rabbit", "brewery": "Independence Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-421931_ad9f4_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 99 }, { "id": 1703845, "name": "30th Anniversary Perseverance Ale", "brewery": "Alaskan Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1703845_31ffd_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 100 }, { "id": 5738, "name": "(512) Pecan Porter", "brewery": "(512) Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-PecanPorter_5738.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 101 }, { "id": 1980883, "name": "Alamo IPA", "brewery": "Alamo Beer Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 102 }, { "id": 4079, "name": "Amber", "brewery": "Alaskan Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_4079_sm_1dd91bc692daf15218735d260b047d.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 103 }, { "id": 461908, "name": "Goatman", "brewery": "Lakewood Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-461908_86380_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 104 }, { "id": 134642, "name": "Tripel B", "brewery": "Adelbert's Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_134642_sm_ddd26965dcd87fa2688679c08c0665.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 105 }, { "id": 1904900, "name": "The Illustrated Man", "brewery": "Independence Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1904900_a8c63_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 106 }, { "id": 602768, "name": "Ace Pineapple Cider", "brewery": "Ace Cider (The California Cider Company)", "image": "https://untappd.akamaized.net/site/beer_logos/beer-602768_6b136_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 107 }, { "id": 2032368, "name": "Kolsch", "brewery": "Altstadt Brewery", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 108 }, { "id": 4902, "name": "Dirty Blonde", "brewery": "Atwater Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-4902_efe2a_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 109 }, { "id": 818461, "name": "Crackberry", "brewery": "Bishop Cider Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 110 }, { "id": 1935907, "name": "Unfiltered Sculpin", "brewery": "Ballast Point Brewing & Spirits", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1935907_4f876_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 111 }, { "id": 1069310, "name": "Raspberry Sour", "brewery": "Avery Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1069310_df207_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 112 }, { "id": 1447769, "name": "Oatsmobile Ale", "brewery": "Bell's Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1447769_ea5e7_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 113 }, { "id": 79280, "name": "Purple Gang Pilsner", "brewery": "Atwater Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-79280_b4b1b_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 114 }, { "id": 446701, "name": "Green Apple", "brewery": "Angry Orchard Cider Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_446701_sm_afb9064fb4514cb9ba086523262f84.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 115 }, { "id": 860450, "name": "Little Boss", "brewery": "Blue Owl Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-860450_5283d_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 116 }, { "id": 952936, "name": "Nectar", "brewery": "Bishop Cider Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 117 }, { "id": 5558, "name": "Sculpin IPA", "brewery": "Ballast Point Brewing & Spirits", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_5558_sm_568370b6ade3c2ed1ffd9a311fa92f.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 118 }, { "id": 880465, "name": "Peppermint Victory At Sea", "brewery": "Ballast Point Brewing & Spirits", "image": "https://untappd.akamaized.net/site/beer_logos/beer-880465_bc7ab_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 119 }, { "id": 4515, "name": "The Maharaja", "brewery": "Avery Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-Maharaja_4515.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 120 }, { "id": 1445738, "name": "Sour Cherry", "brewery": "Bishop Cider Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 121 }, { "id": 1490878, "name": "Tropical Pale Ale", "brewery": "Boulevard Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1490878_9c6e5_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 122 }, { "id": 1576590, "name": "Vinho Pearde", "brewery": "Argus Cidery", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 123 }, { "id": 1472063, "name": "Coconut Porter", "brewery": "Avery Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1472063_98400_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 124 }, { "id": 52024, "name": "Fire Eagle", "brewery": "Austin Beerworks", "image": "https://untappd.akamaized.net/site/beer_logos/beer-austinBeerworksFireEagle.jpg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 125 }, { "id": 53251, "name": "Black Thunder", "brewery": "Austin Beerworks", "image": "https://untappd.akamaized.net/site/beer_logos/beer-austinBeerworksBlackThunder.jpg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 126 }, { "id": 1468388, "name": "Tejas Negra", "brewery": "Big Bend Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1468388_8c392_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 127 }, { "id": 1974093, "name": "Blood Orange", "brewery": "Austin Eastciders", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1974093_d81dd_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 128 }, { "id": 1677565, "name": "Easy Apple", "brewery": "Angry Orchard Cider Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1677565_0b30b_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 129 }, { "id": 1389067, "name": "Hopped Cider", "brewery": "Austin Eastciders", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1389067_5a2b2_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 130 }, { "id": 16581, "name": "Oberon Ale", "brewery": "Bell's Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-16581_2ac08_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 131 }, { "id": 1910224, "name": "American Kolsch", "brewery": "Boulevard Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1910224_47792_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 132 }, { "id": 4133, "name": "Two Hearted Ale", "brewery": "Bell's Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-4133_13fdb_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 133 }, { "id": 1082056, "name": "Foreign Export Stout", "brewery": "BrainDead Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1082056_8fb59_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 134 }, { "id": 1529374, "name": "Pineapple Cider", "brewery": "Austin Eastciders", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1529374_7c01e_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 135 }, { "id": 1504257, "name": "Idle Playthings", "brewery": "BrainDead Brewing", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 136 }, { "id": 1492338, "name": "Balmorhea", "brewery": "Big Bend Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1492338_c79d0_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 137 }, { "id": 1633856, "name": "Tiny Barrel Series: Little Orange Gose", "brewery": "Blue Owl Brewing", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 138 }, { "id": 10891, "name": "Tank 7 Farmhouse Ale", "brewery": "Boulevard Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-10891_26699_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 139 }, { "id": 1002626, "name": "Ciderkin", "brewery": "Argus Cidery", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 140 }, { "id": 1396953, "name": "We Own the Night", "brewery": "BrainDead Brewing", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 141 }, { "id": 1101500, "name": "Whango", "brewery": "Atwater Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1101500_ea49b_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 142 }, { "id": 1487488, "name": "El Gose", "brewery": "Avery Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1487488_6616e_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 143 }, { "id": 860452, "name": "Van Dayum!", "brewery": "Blue Owl Brewing", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 144 }, { "id": 1877804, "name": "West of the Pecos", "brewery": "Big Bend Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1877804_938da_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 145 }, { "id": 53249, "name": "Pearl-Snap", "brewery": "Austin Beerworks", "image": "https://untappd.akamaized.net/site/beer_logos/beer-austinBeerworksPearlSnap.jpg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 146 }, { "id": 984946, "name": "Bloodwork Orange IPA", "brewery": "Austin Beerworks", "image": "https://untappd.akamaized.net/site/beer_logos/beer-984946_19c02_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 147 }, { "id": 867998, "name": "Oaked Mosaic IPA", "brewery": "Community Beer Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-867998_7c33e_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 148 }, { "id": 36834, "name": "All Day IPA", "brewery": "Founders Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-36834_82ca8_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 149 }, { "id": 9827, "name": "Orange Avenue Wit", "brewery": "Coronado Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-9827_f9c88_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 150 }, { "id": 1181009, "name": "Bel Air Sour", "brewery": "Brooklyn Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1181009_57fa6_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 151 }, { "id": 1390262, "name": "Guava Islander IPA", "brewery": "Coronado Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 152 }, { "id": 1197529, "name": "Suspicious Delicious", "brewery": "The Collective Brewing Project", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1197529_77b34_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 153 }, { "id": 1598201, "name": "Funky Thunder", "brewery": "The Collective Brewing Project", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1598201_89b0c_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 154 }, { "id": 342746, "name": "Mosaic IPA", "brewery": "Community Beer Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-342746_4b35a_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 155 }, { "id": 5210, "name": "Mama's Little Yella Pils", "brewery": "Oskar Blues Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-MamasLittleYellaPils_5210.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 156 }, { "id": 6155, "name": "Brooklyn Pilsner", "brewery": "Brooklyn Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-6155_67773_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 157 }, { "id": 1464471, "name": "Archetype", "brewery": "Circle Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1464471_3eb85_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 158 }, { "id": 201719, "name": "Dallas Blonde", "brewery": "Deep Ellum Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-201719_4f48b_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 159 }, { "id": 5571, "name": "Brooklyn Summer Ale", "brewery": "Brooklyn Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-5571_c526e_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 160 }, { "id": 2031848, "name": "Lady Bird American IPA", "brewery": "Circle Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-2031848_17973_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 161 }, { "id": 1010547, "name": "Devil's Envy", "brewery": "Circle Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1010547_8cb71_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 162 }, { "id": 1957464, "name": "Silly Gose", "brewery": "Community Beer Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 163 }, { "id": 1654051, "name": "Wood Folk", "brewery": "The Collective Brewing Project", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1654051_d4f6a_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 164 }, { "id": 1554479, "name": "Texas Helles", "brewery": "Community Beer Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1554479_fa3de_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 165 }, { "id": 13018, "name": "Islander IPA", "brewery": "Coronado Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-13018_fd14f_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 166 }, { "id": 1966351, "name": "Leo v. Ursus: Fortem", "brewery": "Firestone Walker Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1966351_9b6d7_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 167 }, { "id": 1452078, "name": "SeaQuench Ale", "brewery": "Dogfish Head Craft Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1452078_33a60_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 168 }, { "id": 15739, "name": "Sumatra Mountain Brown", "brewery": "Founders Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-15739_cfd48_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 169 }, { "id": 74539, "name": "Pivo Pils", "brewery": "Firestone Walker Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-74539_b46db_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 170 }, { "id": 1935360, "name": "Luponic Distortion: Revolution No. 005", "brewery": "Firestone Walker Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-77672_4fca7_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 171 }, { "id": 4590, "name": "Rübæus", "brewery": "Founders Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-4590_94f44_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 172 }, { "id": 119056, "name": "Deep Ellum IPA", "brewery": "Deep Ellum Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-119056_67adc_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 173 }, { "id": 21563, "name": "Soul Doubt IPA", "brewery": "Freetail Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-21563_08579_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 174 }, { "id": 8056, "name": "90 Minute IPA", "brewery": "Dogfish Head Craft Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-8056_948fa_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 175 }, { "id": 1133245, "name": "Los Locos", "brewery": "Epic Brewing Co. (Utah, Colorado)", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1133245_3c3bc_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 176 }, { "id": 4487, "name": "Palo Santo Marron", "brewery": "Dogfish Head Craft Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-dfhPaloSantoMarron.jpg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 177 }, { "id": 1321135, "name": "Tart 'N Juicy Sour IPA", "brewery": "Epic Brewing Co. (Utah, Colorado)", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1321135_0c9cc_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 178 }, { "id": 1338289, "name": "PC Pils", "brewery": "Founders Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1338289_9d913_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 179 }, { "id": 1711213, "name": "UFO Huckleberry ", "brewery": "Harpoon Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1711213_6838f_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 180 }, { "id": 1387105, "name": "Camp Wannamango", "brewery": "Harpoon Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1387105_46b87_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 181 }, { "id": 1441255, "name": "Flesh & Blood IPA", "brewery": "Dogfish Head Craft Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1441255_8c757_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 182 }, { "id": 287127, "name": "A Pale Mosaic", "brewery": "Hops & Grain Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-287127_bb94f_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 183 }, { "id": 1736313, "name": "Bourbon Barrel Aged Imperial Stout (2016)", "brewery": "Full Sail Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1736313_bebb7_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 184 }, { "id": 5968, "name": "UFO White Ale", "brewery": "Harpoon Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-5968_6afaa_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 185 }, { "id": 2043919, "name": "Cerveza", "brewery": "Freetail Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-2043919_e73ea_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 186 }, { "id": 224620, "name": "Hijack", "brewery": "Infamous Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-224620_f6dc3_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 187 }, { "id": 1052528, "name": "Lizard of Koz", "brewery": "Founders Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1052528_bbde5_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 188 }, { "id": 533432, "name": "Sweep The Leg - Peanut Butter Stout", "brewery": "Infamous Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-533432_0c63c_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 189 }, { "id": 900662, "name": "Numb Comfort (Barrel Aged)", "brewery": "Deep Ellum Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-900662_5c125_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 190 }, { "id": 2023587, "name": "Session Cerveza", "brewery": "Full Sail Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 191 }, { "id": 1989143, "name": "Pellets & Powder IPA", "brewery": "Hops & Grain Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1989143_7eaf4_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 192 }, { "id": 1078219, "name": "Easy Peasy", "brewery": "Deep Ellum Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1078219_6656b_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 193 }, { "id": 1989449, "name": "Deep Ellum Lager", "brewery": "Deep Ellum Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1989449_466a8_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 194 }, { "id": 2001282, "name": "CELLAR 3:NOUVEAU TARTE", "brewery": "Green Flash Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 195 }, { "id": 1149759, "name": "Dispensary Series: Imperial IPA", "brewery": "Hops & Grain Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1149759_4ccaa_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 196 }, { "id": 1252259, "name": "Son of A Baptist", "brewery": "Epic Brewing Co. (Utah, Colorado)", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1252259_255ce_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 197 }, { "id": 201681, "name": "Funk Metal", "brewery": "Jester King Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_201681_84017325a9e59bb97b69fe6ae498.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 198 }, { "id": 6807, "name": "Sofie", "brewery": "Goose Island Beer Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-6807_c6456_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 199 }, { "id": 1353, "name": "Goose IPA", "brewery": "Goose Island Beer Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1353_b23f2_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 200 }, { "id": 165577, "name": "The One They Call Zoe", "brewery": "Hops & Grain Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_165577_sm_914a7139a390d9669c9001053f3217.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 201 }, { "id": 1349711, "name": "787Ö2 Kölsch", "brewery": "Hops & Grain Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1349711_45cb5_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 202 }, { "id": 1130373, "name": "Passion Fruit Kicker", "brewery": "Green Flash Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1130373_e0de6_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 203 }, { "id": 1414135, "name": "Sex A Peel", "brewery": "Infamous Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1414135_03685_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 204 }, { "id": 1953210, "name": "River Beer", "brewery": "Hops & Grain Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1953210_960d6_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 205 }, { "id": 1815839, "name": "GFB", "brewery": "Green Flash Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1815839_92716_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 206 }, { "id": 13529, "name": "Lolita", "brewery": "Goose Island Beer Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-13529_96ba4_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 207 }, { "id": 1731432, "name": "Ideal Belgique", "brewery": "Green Flash Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1731432_49277_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 208 }, { "id": 6830, "name": "Backwoods Bastard", "brewery": "Founders Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-6830_66eb0_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 209 }, { "id": 18010, "name": "Rye Wit", "brewery": "Freetail Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-18010_ba79c_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 210 }, { "id": 1706096, "name": "Windows Up", "brewery": "Alpine Beer Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1706096_ebdb3_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 211 }, { "id": 1724500, "name": "La Vie En Rose (Batch 5)", "brewery": "Jester King Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_550314_sm_865fbb1fc074619796327bb64fb266.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 212 }, { "id": 1317401, "name": "Play Date", "brewery": "Deep Ellum Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1317401_4cdd8_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 213 }, { "id": 1476282, "name": "Hop Pursuit IPA", "brewery": "Full Sail Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1476282_71595_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 214 }, { "id": 9657, "name": "Big Wave Golden Ale", "brewery": "Kona Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-9657_429c5_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 215 }, { "id": 8172, "name": "Kentucky Bourbon Barrel Ale", "brewery": "Alltech Lexington Brewing & Distilling Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-8172_b2222_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 216 }, { "id": 327936, "name": "Yellow Rose", "brewery": "Lone Pint Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-327936_2c809_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 217 }, { "id": 31323, "name": "Myrcenary Double IPA", "brewery": "Odell Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-31323_b289c_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 218 }, { "id": 4509, "name": "IPA", "brewery": "Lagunitas Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-4509_1ce65_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 219 }, { "id": 1743544, "name": "Voodoo Ranger IPA", "brewery": "New Belgium Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1743544_0638d_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 220 }, { "id": 461411, "name": "Discovery", "brewery": "Meridian Hive", "image": "https://untappd.akamaized.net/site/beer_logos/beer-461411_be532_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 221 }, { "id": 273650, "name": "667 Neighbor Of The Beast", "brewery": "Lone Pint Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-273650_10f83_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 222 }, { "id": 6887, "name": "Fat Tire", "brewery": "New Belgium Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-6887_25a2f_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 223 }, { "id": 35297, "name": "Baudelaire Beer iO Saison", "brewery": "Jolly Pumpkin Artisan Ales", "image": "https://untappd.akamaized.net/site/beer_logos/beer-35297_27722_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 224 }, { "id": 1139170, "name": "Citradelic: Tangerine IPA", "brewery": "New Belgium Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1139170_ff43b_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 225 }, { "id": 505383, "name": "Frontier", "brewery": "Meridian Hive", "image": "https://untappd.akamaized.net/site/beer_logos/beer-505383_82883_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 226 }, { "id": 2046318, "name": "Mr. Rogers", "brewery": "NXNW  Restaurant & Brewery", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 227 }, { "id": 1530645, "name": "You May All Go To Helles, I Will Go To Texas", "brewery": "Oasis Texas Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 228 }, { "id": 555964, "name": "Seasonal Brew", "brewery": "Kona Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 229 }, { "id": 983830, "name": "Live Oak Gold", "brewery": "Live Oak Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-983830_be1f3_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 230 }, { "id": 1923206, "name": "Kentucky Bourbon Barrel Blackberry Porter", "brewery": "Alltech Lexington Brewing & Distilling Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1923206_e0bc1_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 231 }, { "id": 5280, "name": "Pilz", "brewery": "Live Oak Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-5280_d9202_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 232 }, { "id": 2031078, "name": "Cerveza de Mezquite", "brewery": "Jester King Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-2031078_ac957_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 233 }, { "id": 11266, "name": "Good Juju", "brewery": "Left Hand Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_11266_bd23ab0d0d1e68c2696008408fd0.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 234 }, { "id": 1553172, "name": "No Ka Oï", "brewery": "Jolly Pumpkin Artisan Ales", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1553172_3f52a_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 235 }, { "id": 582821, "name": "Zythophile El Dorado", "brewery": "Lone Pint Brewery", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 236 }, { "id": 31791, "name": "Northern Light", "brewery": "NXNW  Restaurant & Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-31791_3b1b0_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 237 }, { "id": 5279, "name": "HefeWeizen", "brewery": "Live Oak Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-5279_2107a_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 238 }, { "id": 1428099, "name": "Dynamo", "brewery": "Meridian Hive", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1428099_10207_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 239 }, { "id": 1507, "name": "Milk Stout", "brewery": "Left Hand Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_1507_6141118d6fd37055bc992cfa5618.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 240 }, { "id": 1604713, "name": "Hanalei Island IPA", "brewery": "Kona Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1604713_bf809_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 241 }, { "id": 682206, "name": "London Homesick Ale", "brewery": "Oasis Texas Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-682206_8f2cb_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 242 }, { "id": 6725, "name": "Pils", "brewery": "Lagunitas Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-PILS_6725.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 243 }, { "id": 1962363, "name": "Kentucky Vanilla Barrel Cream Ale", "brewery": "Alltech Lexington Brewing & Distilling Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1962363_0e0df_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 244 }, { "id": 531123, "name": "Stonelake IPA", "brewery": "NXNW  Restaurant & Brewery", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 245 }, { "id": 1954331, "name": "Fair Voyage", "brewery": "Jester King Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1954331_ea0da_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 246 }, { "id": 2053406, "name": "Supermodern", "brewery": "Oasis Texas Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 247 }, { "id": 45245, "name": "The Waldos' Special Ale", "brewery": "Lagunitas Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-45245_2897d_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 248 }, { "id": 28, "name": "IPA", "brewery": "Odell Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-odell-IPA.jpg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 249 }, { "id": 2025464, "name": "Travelin' Light Kolsch", "brewery": "Left Hand Brewing Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 250 }, { "id": 179169, "name": "Sobrehumano Palena ‘ole", "brewery": "Jolly Pumpkin Artisan Ales", "image": "https://untappd.akamaized.net/site/beer_logos/beer-SobrehumanoPalenaole_179169.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 251 }, { "id": 208, "name": "90 Shilling", "brewery": "Odell Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-odell90-Shilling.jpg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 252 }, { "id": 1995779, "name": "Saison Au Miel", "brewery": "Left Hand Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1995779_a64dd_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 253 }, { "id": 245695, "name": "The Meddler Oud Bruin", "brewery": "Odell Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_245695_af44ce91b35fa6b17b40e9154966.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 254 }, { "id": 1133280, "name": "Shiner Strawberry Blonde", "brewery": "Spoetzl Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1133280_ac901_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 255 }, { "id": 1740374, "name": "Samuel Adams Rebel Juiced IPA", "brewery": "Boston Beer Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1740374_2649d_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 256 }, { "id": 1415165, "name": "Sweet Sunny South", "brewery": "Sierra Nevada Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1415165_98779_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 257 }, { "id": 692371, "name": "Grapefruit and Chill", "brewery": "Schilling Cider", "image": "https://untappd.akamaized.net/site/beer_logos/beer-692371_f891b_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 258 }, { "id": 1695697, "name": "Sidecar Orange Pale Ale", "brewery": "Sierra Nevada Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1695697_ccc11_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 259 }, { "id": 1803887, "name": "Cherry Chocolate Stout", "brewery": "Sierra Nevada Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1803887_2bcfb_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 260 }, { "id": 1560810, "name": "Raspberry AF", "brewery": "Saint Arnold Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1560810_3be05_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 261 }, { "id": 4488, "name": "Shiner Bock", "brewery": "Spoetzl Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-4488_3b1ec_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 262 }, { "id": 1741133, "name": "Tropical Torpedo", "brewery": "Sierra Nevada Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1741133_0a236_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 263 }, { "id": 3916, "name": "Samuel Adams Summer Ale", "brewery": "Boston Beer Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-_3916_sm_2a69f4a012bc330ad111bc2e508cc6.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 264 }, { "id": 1876872, "name": "Shiner Berliner Weisse", "brewery": "Spoetzl Brewery", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 265 }, { "id": 263666, "name": "Narwhal Imperial Stout", "brewery": "Sierra Nevada Brewing Co.", "image": "https://untappd.akamaized.net/site/beer_logos/beer-263666_cf1b2_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 266 }, { "id": 2057859, "name": "Passport Pineapple Passionfruit", "brewery": "Schilling Cider", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 267 }, { "id": 1720311, "name": "Shiner Homespun", "brewery": "Spoetzl Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1720311_b8537_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 268 }, { "id": 2032144, "name": "Wild Child", "brewery": "Boston Beer Company", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 269 }, { "id": 41501, "name": "Shiner Ruby Redbird", "brewery": "Spoetzl Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-41501_d73a2_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 270 }, { "id": 39912, "name": "Shiner Light Blonde", "brewery": "Spoetzl Brewery", "image": "https://untappd.akamaized.net/site/beer_logos/beer-ShinerLightBlonde_39912.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 271 }, { "id": 1187761, "name": "Art Car IPA", "brewery": "Saint Arnold Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1187761_6c454_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 272 }, { "id": 2050573, "name": "Emerald City Blackberry Pear", "brewery": "Schilling Cider", "image": "https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 273 }, { "id": 1899130, "name": "Pub Crawl", "brewery": "Saint Arnold Brewing Company", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1899130_cafd9_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 274 }, { "id": 1652170, "name": "Stone Ripper", "brewery": "Stone Brewing", "image": "https://untappd.akamaized.net/site/beer_logos/beer-1652170_0a575_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 275 }, { "id": 707667, "name": "London Dry", "brewery": "Schilling Cider", "image": "https://untappd.akamaized.net/site/beer_logos/beer-707667_74237_sm.jpeg", "rating": 0, "isCheckedIn": false, "isOpen": false, "checked": false, "isFavorite": false, "bucket": 0, "index": 276 }]], "checkCount": 0 };
-exports.default = index;
-
-/***/ }),
-/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2287,7 +2345,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(41);
+__webpack_require__(40);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2327,7 +2385,7 @@ var Notification = function (_Component) {
 exports.default = Notification;
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -2341,7 +2399,7 @@ exports.push([module.i, ".notification {\n  display: block;\n  padding: 10px;\n}
 
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2357,7 +2415,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(11);
+__webpack_require__(10);
 
 __webpack_require__(5);
 
@@ -2400,7 +2458,7 @@ var Search = function (_Component) {
 exports.default = Search;
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2416,7 +2474,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-__webpack_require__(44);
+__webpack_require__(43);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2468,7 +2526,7 @@ var Select = function (_Component) {
 exports.default = Select;
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);

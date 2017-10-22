@@ -172,6 +172,6 @@ app.get('/api/curated-lists', function (req, res) {
 
 app.get('/*', handleRequest);
 
-app.listen(process.env.FH_PORT || 5000, function () {
-  console.log('express app is listening on port ' + (process.env.FH_PORT || 5000));
+app.listen(process.env.PORT || 5000, function () {
+  console.log('express app is listening on port ' + (process.env.PORT || 5000));
 });

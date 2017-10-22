@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import List from './list';
 import Category from './category';
 import utils from '../utils/utils';
@@ -11,7 +12,7 @@ class Categories extends Component {
     super(props);
     let items;
     // if items were specifically passed in, use them
-    if (this.props.items) {
+    if (this.props.items.length > 0) {
       items = this.props.items;
     } else if (utils.isClientSide() && window && window.appData && window.appData.categories) {
       // look for items stored in appData
@@ -44,13 +45,6 @@ class Categories extends Component {
         });
     }
   }
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   console.log('the arguments for shouldComponentUpdate: ', nextProps, nextState);
-  //   if (this.isPopulated()) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
   render() {
     if (this.state.items.length < 1) {
       return (
@@ -64,5 +58,13 @@ class Categories extends Component {
     );
   }
 }
+
+Categories.propTypes = {
+  items: PropTypes.arrayOf(PropTypes.object),
+};
+
+Categories.defaultProps = {
+  items: [],
+};
 
 export default Categories;

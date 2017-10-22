@@ -2,7 +2,7 @@ var MongoClient = require('mongodb').MongoClient;
 
 function getAllCuratedLists() {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(process.env.FH_MONGO_DB, (err, db) => {
+    MongoClient.connect(process.env.MONGODB_URI, (err, db) => {
       if (err) {
         reject(err);
       }
@@ -28,7 +28,7 @@ function getCuratedBeerList(listId) {
     if (!listId) {
       reject('a listid query was not provided ')
     }
-    MongoClient.connect(process.env.FH_MONGO_DB, (err, db) => {
+    MongoClient.connect(process.env.MONGODB_URI, (err, db) => {
       if (err) {
         reject(err);
       }

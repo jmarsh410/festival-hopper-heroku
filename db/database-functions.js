@@ -6,12 +6,38 @@ function getAllCuratedLists() {
       if (err) {
         reject(err);
       }
+      // find 
       db.collection('curatedlists').find().toArray((findErr, docs) => {
         if (findErr) {
           console.log('could not get curated lists');
           return console.log(findErr);
         }
-        return resolve(docs);
+        var mappedDocs = docs.map(function(doc){
+          delete doc.beers;
+          return doc;
+        });
+        return resolve(mappedDocs);
+      });
+    });
+  });
+}
+
+function getCuratedBeerList(listId) {
+  return new Promise((resolve, reject) => {
+    // requires that a listid be provided as a parameter
+    if (!listId) {
+      reject('a listid query was not provided ')
+    }
+    MongoClient.connect(process.env.FH_MONGO_DB, (err, db) => {
+      if (err) {
+        reject(err);
+      }
+      db.collection('curatedlists').find({ id: listId }).next((findErr, result) => {
+        if (findErr) {
+          return reject(findErr);
+        }
+        console.log(result);
+        return resolve(result);
       });
     });
   });
@@ -19,6 +45,7 @@ function getAllCuratedLists() {
 
 var dbFunctions = {
   getAllCuratedLists: getAllCuratedLists,
+  getCuratedBeerList: getCuratedBeerList,
 };
 
 module.exports = dbFunctions;

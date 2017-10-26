@@ -31,8 +31,21 @@ const sortTerms = {
 class BeerListContainer extends Component {
   constructor(props) {
     super(props);
+
+    // depending on server or client environment, look for data in certain places
+    let list;
+    // server render passes the list in
+    if (this.props.list) {
+      list = this.props.list;
+    } else if (utils.isClientSide() && window && window.appData && window.appData.list) {
+      // look for list stored in appData
+      list = window.appData.list;
+    } else {
+      list = { id: null, name: null, beers: null, checkCount: 0, totalCount: 0 };
+    }
+
     this.state = {
-      list: { id: null, name: null, beers: null, checkCount: 0, totalCount: 0 },
+      list,
       errors: [],
       isLoading: false,
       notifications: [],
@@ -59,11 +72,18 @@ class BeerListContainer extends Component {
       this.makeList = apiCallInfo[this.listType].makeList;
     }
   }
-  showModalSpinner() {
-    this.setState({ waiting: true });
+  componentWillMount() {
+    if (utils.isClientSide()) {
+      // add a scroll event listener
+      window.addEventListener('scroll', this.handleScroll);
+      this.getInitialBeers();
+    }
   }
-  hideModalSpinner() {
-    this.setState({ waiting: false });
+  componentWillUnmount() {
+    if (utils.isClientSide()) {
+      // add a scroll event listener
+      window.removeEventListener('scroll', this.handleScroll);
+    }
   }
   addNotification(error) {
     this.setState((prevState) => {
@@ -91,7 +111,9 @@ class BeerListContainer extends Component {
   }
   updateStorage(list) {
     // store beer list on localStorage
-    localStorage[this.listId] = JSON.stringify(list);
+    if (utils.isClientSide()) {
+      localStorage[this.listId] = JSON.stringify(list);
+    }
   }
   fetchBeersFromUntappd(add) {
     const self = this;
@@ -100,8 +122,6 @@ class BeerListContainer extends Component {
     const apiOffset = add ? bucketNum * this.defaultListSize : 0;
     this.clearNotifications();
     this.showLoadingSpinner();
-    console.log(`isClientSide: ${utils.isClientSide()}`);
-    console.log(fetch);
     fetch(this.apiEndpoint(this.listId, apiOffset))
       .then((response) => {
         if (response.status !== 200) {
@@ -115,9 +135,10 @@ class BeerListContainer extends Component {
         if (add) {
           const newBeers = this.normalizeData(json, bucketNum);
           this.setState((prevState) => {
-            prevState.list.beers.push(newBeers);
-            prevState.list.beerCount += newBeers.length;
-            return { list: prevState.list };
+            const newState = Object.assign({}, prevState);
+            newState.list.beers.push(newBeers);
+            newState.list.beerCount += newBeers.length;
+            return { list: newState.list };
           });
         } else {
           const list = self.makeList(json, self.listId);
@@ -132,15 +153,15 @@ class BeerListContainer extends Component {
       });
   }
   getInitialBeers() {
-    // check localStorage for this list's beers
-    if (localStorage[this.listId] && !_.isEmpty(localStorage[this.listId])) {
-      this.updateList(JSON.parse(localStorage[this.listId]));
-    } else {
-      // list isn't found in storage, make a fetch request for it
-      // check whether this is a curated list or a list that needs an api call
-      if (this.listType === 'curated') {
+    if (utils.isClientSide()) {
+      // check localStorage for this list's beers
+      if (localStorage[this.listId] && !_.isEmpty(localStorage[this.listId])) {
+        this.updateList(JSON.parse(localStorage[this.listId]));
+      } else if (this.listType === 'curated') {
+        // list isn't found in storage, make a fetch request for it
+        // check whether this is a curated list or a list that needs an api call
         // request the curated list from Festival Hopper's database
-        fetch(`http://${document.location.host}/api/beer-list/curated?listid=${this.listId}`)
+        fetch(`//${document.location.host}/api/beer-list/curated?listid=${this.listId}`)
           .then((response) => {
             if (response.status !== 200) {
               console.error('could not get curated list');
@@ -151,7 +172,7 @@ class BeerListContainer extends Component {
             this.updateList(json);
           })
           .catch((err) => {
-            console.error(error);
+            console.error(err);
           });
       } else {
         // if this list hasn't been saved, get it
@@ -159,7 +180,7 @@ class BeerListContainer extends Component {
       }
     }
   }
-  handleModalClick(e) {
+  handleModalClick() {
     this.setState({
       notifications: [],
     });
@@ -172,12 +193,12 @@ class BeerListContainer extends Component {
     const checkedboxes = listContainer.querySelectorAll('.beer:not(.checkedIn) .checkbox input:checked');
     let count = checkedboxes.length;
     self.showModalSpinner();
-    const done = function() {
+    const done = () => {
       // get rid of the spinner
       self.hideModalSpinner();
     };
-    const next = function() {
-      --count;
+    const next = () => {
+      count += -1;
       if (count === 0) {
         done();
       }
@@ -190,7 +211,7 @@ class BeerListContainer extends Component {
       const bucket = beer.getAttribute('data-bucket');
       const index = beer.getAttribute('data-index');
       // make sure to multiply by -1. because the offset is positive if it is behind and vice versa
-      const timezoneOffset = ((new Date().getTimezoneOffset() / 60) * -1) + ''; // make it a string
+      const timezoneOffset = `${((new Date().getTimezoneOffset() / 60) * -1)}`; // make it a string
       const beerId = Number(beer.getAttribute('data-id'));
       const beerName = beer.getAttribute('data-name');
       const description = beer.querySelector('.beer-description').value;
@@ -218,22 +239,22 @@ class BeerListContainer extends Component {
         .then((json) => {
           console.log(json);
           if (fetchResponse.status !== 200) {
-            console.error('The server responded with: ' + fetchResponse.status);
+            console.error(`The server responded with: ${fetchResponse.status}`);
             console.error(json.meta.error_detail);
-            console.error('The beer that messed up was: ' + beerName + ':' + beerId);
-            self.addNotification({ id: utils.generateId(), text: 'There was a problem checking in ' + beerName + '. ' + json.meta.error_detail, type: 'error' });
+            console.error(`The beer that messed up was: ${beerName}:${beerId}`);
+            self.addNotification({ id: utils.generateId(), text: `There was a problem checking in ${beerName}. ${json.meta.error_detail}`, type: 'error' });
           } else {
             // log how many api calls you have left in the hour
             // this stopped working for some reason
-            // console.log('Number of requests left are: ' + fetchResponse.headers['X-Ratelimit-Remaining']);
             self.setState((prevState) => {
-              prevState.list.beers[bucket][index].isCheckedIn = true;
+              const newState = Object.assign({}, prevState);
+              newState.list.beers[bucket][index].isCheckedIn = true;
               // clear out the check count
-              prevState.list.checkCount = 0;
-              prevState.notifications.push({ id: utils.generateId(), text: 'call was successful', type: 'generic' });
+              newState.list.checkCount = 0;
+              newState.notifications.push({ id: utils.generateId(), text: 'call was successful', type: 'generic' });
               return {
-                list: prevState.list,
-                notifications: prevState.notifications,
+                list: newState.list,
+                notifications: newState.notifications,
               };
             });
           }
@@ -259,7 +280,9 @@ class BeerListContainer extends Component {
     // make it a favorite
     if (target.closest('.beer-favorite')) {
       this.setState((prevState) => {
-        prevState.list.beers[bucket][index].isFavorite = prevState.list.beers[bucket][index].isFavorite === true ? false : true;
+        prevState.list.beers[bucket][index].isFavorite = prevState.list.beers[bucket][index].isFavorite === true
+          ? false
+          : true;
         return { list: prevState.list };
       });
     }
@@ -332,24 +355,17 @@ class BeerListContainer extends Component {
     }
     return beers;
   }
+  showModalSpinner() {
+    this.setState({ waiting: true });
+  }
+  hideModalSpinner() {
+    this.setState({ waiting: false });
+  }
   showLoadingSpinner() {
     this.setState({ isLoading: true });
   }
   hideLoadingSpinner() {
     this.setState({ isLoading: false });
-  }
-  componentWillMount() {
-    if (utils.isClientSide()) {
-      // add a scroll event listener
-      window.addEventListener('scroll', this.handleScroll);
-    }
-    this.getInitialBeers();
-  }
-  componentWillUnmount() {
-    if (utils.isClientSide()) {
-      // add a scroll event listener
-      window.removeEventListener('scroll', this.handleScroll);
-    }
   }
   render() {
     // const self = this;
@@ -393,20 +409,23 @@ class BeerListContainer extends Component {
         <LoadingSpinner />
       );
     }
+    // the favorites list
+    // <List title="Favorites" items={this.getFavoriteItems()} type={Beer} onChange={this.handleInputChange} />
+
     return (
       <div className="beers">
+        <h1>{this.state.list.name}</h1>
         <BeerListControls>
           <Search inputName="beer-search" placeholder="Search beer name..." handleSubmit={this.handleSearchSubmit} />
           <Select id="beers-sort" label="Sort By:" options={Object.keys(sortTerms)} handleChange={this.handleSortChange} />
         </BeerListControls>
-        <List title="Favorites" items={this.getFavoriteItems()} type={Beer} onChange={this.handleInputChange} />
-        <List title={this.listId} items={this.getFilteredItems()} type={Beer} onChange={this.handleInputChange} />
+        <List title="" items={this.getFilteredItems()} type={Beer} onChange={this.handleInputChange} />
         {loadingSpinner}
         {button}
         {modal}
         {waiting}
       </div>
-    ); 
+    );
   }
 }
 
@@ -424,11 +443,25 @@ BeerListContainer.propTypes = {
     hash: PropTypes.string,
     state: PropTypes.object,
   }),
+  list: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    beers: PropTypes.array,
+    checkCount: PropTypes.number,
+    totalCount: PropTypes.number,
+  }),
 };
 
 BeerListContainer.defaultProps = {
-  match: {},
-  location: {},
+  match: {
+    params: {
+      listId: null,
+    },
+  },
+  location: {
+    pathname: '',
+  },
+  list: { id: null, name: null, beers: null, checkCount: 0, totalCount: 0 },
 };
 
 export default BeerListContainer;

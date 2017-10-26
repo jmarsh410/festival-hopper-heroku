@@ -53,7 +53,7 @@ class Categories extends Component {
     }
     return (
       <div className="categories">
-        <List items={this.state.items} type={Category} title="Curated Lists" />
+        <List items={this.state.items} type={Category} title="Events" />
       </div>
     );
   }

@@ -3,7 +3,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import React from 'react';
 import ReactDomServer from 'react-dom/server';
-import { StaticRouter } from 'react-router';
+import { StaticRouter, matchPath } from 'react-router';
 import nunjucks from 'nunjucks';
 import dataRoutes from './db/data-routes';
 import dbFunctions from './db/database-functions';
@@ -80,10 +80,12 @@ function handleRequest(req, res) {
     const promiseArray = [];
     // loop through the dataRoutes and build an array of
     // all data fetching promises that need to be fulfilled
-    dataRoutes.some((route) => {
-      if (route.url === req.url) {
-        configKey = route.componentName;
-        promiseArray.push(route.data()); // pushes promise onto the promise array
+    dataRoutes.forEach((route) => {
+      const matchObj = matchPath(req.url, { path: route.url });
+      // console.log(matchObj);
+      if (matchObj && matchObj.isExact) {
+        configKey = route.propName;
+        promiseArray.push(route.data(matchObj)); // pushes promise onto the promise array
         return true;
       }
       return false;

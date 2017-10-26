@@ -22,9 +22,12 @@ module.exports = {
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader',
-        ],
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '/media/[hash].[ext]',
+          },
+        },
       },
       {
         test: /\.(js|jsx)/,

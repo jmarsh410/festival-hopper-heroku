@@ -2,6 +2,8 @@
   --dark-green: #282b28;
   --green: #3e5641;
   --light-green: #99c24d;
+  --white: #fff;
+  --black: #000;
 
   --dark: #282b28;
   --medium:#3e5641;
@@ -13,17 +15,32 @@
   --gray: #ccc;
   --light-gray: #ddd;
 
-  --fs-base: 14px;
-  --fs-input: 16px;
-  --fs-l: 2em;
-  --fs-m: 1.5em;
-  --fs-s: var(--fs-base);
-
+  /* Text Color */
   --text-light: #fff;
   --text-dark: var(--dark);
 
+  /* Font Families */
   --title-font-family: 'Signika', sans-serif;
   --body-font-family: 'Open Sans', sans-serif;
+
+    /* Font Size */
+  --fs-base: 16px;
+  --fs-input: 16px;
+  --fs-l: 2rem;
+  --fs-m: 1.5rem;
+  --fs-s: var(--fs-base);
+
+  /* Box Shadows - Material design based */
+  --shadow-low: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  --shadow-med: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  --shadow-high: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+
+  /* Layout */
+  --container-margin: 5%;
+  --container-full-width-padding: 5%;
+}
+* {
+  box-sizing: border-box;
 }
 html {
   background-color: var(--light);
@@ -33,6 +50,10 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--body-font-family);
+}
+html,
+body {
+  overflow-x: hidden;
 }
 button,
 input,

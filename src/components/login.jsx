@@ -10,10 +10,9 @@ class Login extends Component {
   render(){
     return (
       <section className="login">
-        <h1 className="login-title">Festival Hopper</h1>
         <img className="login-attribution" alt="Powered by Untappd" src={pbuLogo}/>
         <p>You are not connected to Untappd, please login before proceeding</p>
-        <ButtonAnchor href={authURL} classes="btn--block btn--positive btn--connect" text="Connect to Untappd"/>
+        <ButtonAnchor href={authURL} classes="btn--block btn--positive btn--connect" text="Log In"/>
       </section>
     );
   }

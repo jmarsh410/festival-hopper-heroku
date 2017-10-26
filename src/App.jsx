@@ -12,15 +12,6 @@ import BrewerySearch from './components/brewery-search';
 import BeerListContainer from './components/beer-list-container';
 import utils from './utils/utils';
 
-// const urlParameter = '#access_token=';
-// http://REDIRECT_URL#access_token=336DB8FB0FDED71D92E55514EFD2132931270D40
-
-// test account user token
-// #access_token=336DB8FB0FDED71D92E55514EFD2132931270D40
-
-// use when testing signup process
-// localStorage.clear();
-
 class App extends Component {
   authenticate() {
     // check if the user's auth token can be found in local storage or a query string
@@ -44,11 +35,7 @@ class App extends Component {
         <Header />
         <Route
           path="/"
-          children={props =>
-          // used the children render method because it always gets
-          // called regardless of current route/location
-            (props.location.pathname !== '/login' ? (<Nav />) : null)
-          }
+          render={props => props.location.pathname !== '/login' ? (<Nav />) : null }
         />
         <main>
           <Route
@@ -79,7 +66,16 @@ class App extends Component {
               return (<Categories />);
             }}
           />
-          <Route path="/curated/:listId" component={BeerListContainer} />
+          <Route
+            path="/curated/:listId"
+            render={(props) => {
+              if (props.staticContext && props.staticContext.data && props.staticContext.data.beerList) {
+                // during SSR, pass in curated list data directly
+                return (<BeerListContainer list={props.staticContext.data.beerList} {...props}/>);
+              }
+              return (<BeerListContainer {...props}/>);
+            }}
+          />
           <Route exact path="/brewery-search" component={BrewerySearch} />
           <Route path="/brewery/:listId" component={BeerListContainer} />
           <Route path="/login" component={Login} />

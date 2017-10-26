@@ -12,7 +12,7 @@ class List extends Component {
     const html = deDupeItems.map((item, i) => {
       // if the item doesn't have an id property, then default to showing the array index
       const key = item.id ? item.id : i;
-      return <li key={key} className="list-item"><Type index={i} data={item}/></li>;
+      return <li key={key} data-order={i} className="list-item"><Type index={i} data={item}/></li>;
     });
     let title = null;
     // don't show title if there are no items in the list

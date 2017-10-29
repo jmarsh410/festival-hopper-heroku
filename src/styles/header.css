@@ -1,8 +1,6 @@
 .header {
   margin-bottom: 0px;
-  padding: 10px;
-  color: white;
-  background-color: var(--dark-green);
+  padding: var(--container-full-width-padding);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -11,12 +9,10 @@
   text-decoration: none;
   color: white;
 }
-.header a:visited {
-  color: white;
-}
 .header-logo {
-  font-size: var(--fs-l);
+  font-size: var(--fs-m);
   font-family: var(--title-font-family);
+  color: var(--dark);
 }
 .header-logout {
   color: white;

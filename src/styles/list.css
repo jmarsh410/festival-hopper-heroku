@@ -3,9 +3,9 @@
   text-align: center;
 }
 .list-main {
-  /*background-color: #eee;*/
   margin: 0;
   padding: 0;
+  box-shadow: var(--shadow-low);
 }
 .list-item {
   background-color: transparent;
@@ -13,6 +13,8 @@
   margin: 0 0 0px;
   padding: 0;
   border-bottom: 1px solid var(--gray);
+  // opacity:0;
+  // transition: opacity .3s ease attr(data-order);
 }
 .list-item:last-child {
   border-bottom: none;

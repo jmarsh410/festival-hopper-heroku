@@ -1,10 +1,28 @@
 .search {
   display: flex;
+  position: relative;
+  border: none;
+  padding: 0;
+  margin-bottom: 10px;
 }
 .search-field {
   flex: 1;
-  padding: 10px;
+  padding: 10px 50px 10px 15px;
   box-shadow: none;
-  border-radius: 0;
+  border-radius: 30px;
   border: none;
+  width: 100%;
+  background: rgba(255,255,255,.25);
+  color: var(--text-dark);
+}
+.search-field::placeholder {
+  color: var(--medium);
+}
+.search-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  fill: var(--medium);
+  padding: 0 10px;
 }

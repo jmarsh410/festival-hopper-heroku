@@ -1,0 +1,28 @@
+.checkIn {
+  position: fixed;
+  bottom: 75px;
+  right: 20px;
+  margin: auto;
+  width: 50px;
+  height: 50px;
+  background-color: var(--positive);
+  border-radius: 20px;
+  color: white;
+  box-shadow: var(--shadow-med);
+  border: 1px solid var(--positive);
+  border-radius: 50%;
+  fill: var(--white);
+  z-index: 1;
+}
+.checkIn-count {
+  position: absolute;
+  bottom: 7px;
+  right: 11px;
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  font-size: .5rem;
+  color: var(--white);
+  background: var(--negative);
+  border-radius: 50%;
+}

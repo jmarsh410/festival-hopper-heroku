@@ -4,7 +4,6 @@
   flex-wrap: wrap;
   margin: 0;
   padding: 10px;
-  background: var(--light-gray);
   border-bottom: 1px solid var(--gray);
 }
 /*.beerListControls > * {
@@ -16,6 +15,7 @@
 }
 .beerListControls .select {
   flex: 1 1 51%;
+  display: none;
 }
 /*@media screen and (min-width:700px) {
   .beerListControls .select {

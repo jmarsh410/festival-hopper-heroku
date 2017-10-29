@@ -1,0 +1,26 @@
+.left-appear {
+  transform: translateX(100%);
+}
+
+.left-appear.left-appear-active {
+  transform: translateX(0);
+  transition: transform .5s ease-in;
+}
+
+.right-appear {
+  transform: translateX(-100%);
+}
+
+.right-appear.right-appear-active {
+  transform: translateX(0);
+  transition: transform .5s ease-in;
+}
+
+.fade-appear {
+  opacity: 0.01;
+}
+
+.fade-appear.fade-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}

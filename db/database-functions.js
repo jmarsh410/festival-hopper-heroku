@@ -23,10 +23,15 @@ function getAllCuratedLists() {
 }
 
 function getCuratedBeerList(listId) {
+  console.log(listId);
+  // in SSR listID will be a match object. looks like this: { path: '/curated', url: '/curated', isExact: true, params: {} }
+  if (listId && listId.params) {
+    listId = listId.params.listId;
+  }
   return new Promise((resolve, reject) => {
     // requires that a listid be provided as a parameter
     if (!listId) {
-      reject('a listid query was not provided ')
+      reject('a listid query was not provided ');
     }
     MongoClient.connect(process.env.MONGODB_URI, (err, db) => {
       if (err) {

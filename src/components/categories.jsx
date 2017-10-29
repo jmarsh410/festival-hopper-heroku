@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import List from './list';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import AsyncList from './async-list';
 import Category from './category';
+import AppBar from './app-bar';
 import utils from '../utils/utils';
 
 // css
@@ -46,25 +48,45 @@ class Categories extends Component {
     }
   }
   render() {
-    if (this.state.items.length < 1) {
-      return (
-        <div>...loading</div>
-      );
-    }
     return (
-      <div className="categories">
-        <List items={this.state.items} type={Category} title="Curated Lists" />
-      </div>
+      <ReactCSSTransitionGroup
+        transitionName={this.props.location
+                          && this.props.location.state
+                          && this.props.location.state.enterDirection
+                          ? this.props.location.state.enterDirection
+                          : 'fade'}
+        transitionAppear={true}
+        transitionAppearTimeout={500}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={300}
+      >
+        <div key="categories" className="categories page">
+          <AppBar title="Events" />
+          <AsyncList items={this.state.items} type={Category} />
+        </div>
+      </ReactCSSTransitionGroup>
     );
   }
 }
 
 Categories.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
+  location: PropTypes.shape({
+    key: PropTypes.string,
+    pathname: PropTypes.string,
+    search: PropTypes.string,
+    hash: PropTypes.string,
+    state: PropTypes.object,
+  }),
 };
 
 Categories.defaultProps = {
   items: [],
+  location: {
+    state: {
+      enterDirection: 'fade',
+    },
+  },
 };
 
 export default Categories;

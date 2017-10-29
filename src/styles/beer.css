@@ -1,9 +1,3 @@
-.beers {
-  margin-bottom: 100px;
-}
-/*.beer.checkedIn {
-  opacity: .5;
-}*/
 .beer {
   background-color: var(--gray);
 }

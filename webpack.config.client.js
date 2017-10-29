@@ -32,13 +32,15 @@ module.exports = {
         use: {
           loader: 'file-loader',
           options: {
-            name: 'static/media/[name].[ext]',
+            name: '/media/[hash].[ext]',
           },
         },
       },
       {
         test: /\.(js|jsx)/,
+        exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
+        query: { compact: false },
       },
     ],
   },

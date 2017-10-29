@@ -6,12 +6,12 @@ import List from './list';
 import Brewery from './brewery';
 import Modal from './modal';
 import LoadingSpinner from './loading-spinner';
+import Search from './search';
+import AppBar from './app-bar';
 import utils from '../utils/utils';
 import '../styles/brewery-search.css';
 import '../styles/search.css';
 import '../styles/button.css';
-
-import 'isomorphic-fetch';
 
 class BrewerySearch extends Component {
   constructor(props) {
@@ -68,7 +68,7 @@ class BrewerySearch extends Component {
     let breweries = null;
     if (this.state.breweries) {
       breweries = (
-        <List items={this.state.breweries} type={Brewery} title="Breweries" />
+        <List items={this.state.breweries} type={Brewery} />
       );
     }
     let modalSpinner = null;
@@ -80,11 +80,13 @@ class BrewerySearch extends Component {
       );
     }
     return (
-      <div className="brewerySearch">
-        <form className="search" onSubmit={this.handleSubmit} noValidate>
-          <input className="search-field" type="text" name="brewery-name" placeholder="Search Breweries" />
-          <button className="search-btn btn btn--positive" type="submit">Submit</button>
-        </form>
+      <div className="brewerySearch page">
+        <AppBar title="Brewery Search" />
+        <Search
+          handleSubmit={this.handleSubmit}
+          inputName="brewery-name"
+          placeholder="Search Breweries..."
+        />
         { modalSpinner }
         { breweries }
       </div>

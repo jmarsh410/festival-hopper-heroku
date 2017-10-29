@@ -4,22 +4,14 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import Header from './components/header';
+import PropTypes from 'prop-types';
 import Nav from './components/nav';
 import Login from './components/login';
 import Categories from './components/categories';
 import BrewerySearch from './components/brewery-search';
 import BeerListContainer from './components/beer-list-container';
 import utils from './utils/utils';
-
-// const urlParameter = '#access_token=';
-// http://REDIRECT_URL#access_token=336DB8FB0FDED71D92E55514EFD2132931270D40
-
-// test account user token
-// #access_token=336DB8FB0FDED71D92E55514EFD2132931270D40
-
-// use when testing signup process
-// localStorage.clear();
+import './styles/page-transitions.css';
 
 class App extends Component {
   authenticate() {
@@ -33,7 +25,7 @@ class App extends Component {
       }
     }
     // if on the server and logged in, then return true
-    if (typeof localStorage === 'undefined' && this.props.userIsLoggedIn) {
+    if (!utils.isClientSide() && this.props.userIsLoggedIn) {
       return true;
     }
     return false;
@@ -41,14 +33,11 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Header />
         <Route
           path="/"
-          children={props =>
-          // used the children render method because it always gets
-          // called regardless of current route/location
-            (props.location.pathname !== '/login' ? (<Nav />) : null)
-          }
+          render={props => (
+            props.location.pathname !== '/login' ? (<Nav />) : null
+          )}
         />
         <main>
           <Route
@@ -79,7 +68,18 @@ class App extends Component {
               return (<Categories />);
             }}
           />
-          <Route path="/curated/:listId" component={BeerListContainer} />
+          <Route
+            path="/curated/:listId"
+            render={(props) => {
+              if (props.staticContext
+                    && props.staticContext.data
+                    && props.staticContext.data.beerList) {
+                // during SSR, pass in curated list data directly
+                return (<BeerListContainer list={props.staticContext.data.beerList} {...props} />);
+              }
+              return (<BeerListContainer {...props} />);
+            }}
+          />
           <Route exact path="/brewery-search" component={BrewerySearch} />
           <Route path="/brewery/:listId" component={BeerListContainer} />
           <Route path="/login" component={Login} />
@@ -88,5 +88,14 @@ class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  userIsLoggedIn: PropTypes.bool,
+};
+
+App.defaultProps = {
+  userIsLoggedIn: false,
+};
+
 
 export default App;

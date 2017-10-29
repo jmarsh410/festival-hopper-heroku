@@ -1,3 +1,12 @@
+nav {
+  position: fixed;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  background: var(--dark);
+  z-index: 1;
+  font-size: .75rem;
+}
 .nav ul {
   display: flex;
   margin: 0;
@@ -5,13 +14,12 @@
   list-style-type: none;
 }
 .nav li:not(:last-child) {
-  border-right: 1px solid var(--dark);
+  border-right: 1px solid var(--white);
 }
 .nav li {
   padding: 20px;
   flex: 1;
   text-align: center;
-  background: var(--medium);
 }
 .nav a {
   color: var(--text-light);

@@ -9,12 +9,12 @@ class Select extends Component {
       <option key={name} value={name}>{name}</option>
     );
     return (
-      <div className="select">
+      <fieldset className="select">
         <label className="select-label" htmlFor={this.props.id}>{this.props.label}</label>
         <select className="select-select" onChange={this.props.handleChange} name={this.props.id} id={this.props.id}>
           {options}
         </select>
-      </div>
+      </fieldset>
     );
   }
 }

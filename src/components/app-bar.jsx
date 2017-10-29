@@ -17,9 +17,9 @@ class AppBar extends Component {
 }
 
 AppBar.propTypes = {
-  left: PropTypes.arrayOf(PropTypes.func),
+  left: PropTypes.arrayOf(PropTypes.element),
   title: PropTypes.string,
-  right: PropTypes.arrayOf(PropTypes.func),
+  right: PropTypes.arrayOf(PropTypes.element),
 };
 
 AppBar.defaultProps = {

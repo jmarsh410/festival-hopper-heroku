@@ -516,6 +516,9 @@ BeerListContainer.defaultProps = {
   },
   location: {
     pathname: '',
+    state: {
+      enterDirection: 'fade',
+    },
   },
   list: { id: null, name: null, beers: null, checkCount: 0, totalCount: 0 },
 };

@@ -32,7 +32,7 @@ module.exports = {
         use: {
           loader: 'file-loader',
           options: {
-            name: '[path][hash].[ext]',
+            name: '/media/[hash].[ext]',
           },
         },
       },
@@ -40,7 +40,7 @@ module.exports = {
         test: /\.(js|jsx)/,
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
-        query: {compact: false}
+        query: { compact: false },
       },
     ],
   },

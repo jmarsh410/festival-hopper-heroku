@@ -71,10 +71,22 @@ class Categories extends Component {
 
 Categories.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
+  location: PropTypes.shape({
+    key: PropTypes.string,
+    pathname: PropTypes.string,
+    search: PropTypes.string,
+    hash: PropTypes.string,
+    state: PropTypes.object,
+  }),
 };
 
 Categories.defaultProps = {
   items: [],
+  location: {
+    state: {
+      enterDirection: 'fade',
+    },
+  },
 };
 
 export default Categories;

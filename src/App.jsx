@@ -4,7 +4,7 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import Header from './components/header';
+import PropTypes from 'prop-types';
 import Nav from './components/nav';
 import Login from './components/login';
 import Categories from './components/categories';
@@ -24,7 +24,7 @@ class App extends Component {
       }
     }
     // if on the server and logged in, then return true
-    if (typeof localStorage === 'undefined' && this.props.userIsLoggedIn) {
+    if (!utils.isClientSide() && this.props.userIsLoggedIn) {
       return true;
     }
     return false;
@@ -32,10 +32,11 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Header />
         <Route
           path="/"
-          render={props => props.location.pathname !== '/login' ? (<Nav />) : null }
+          render={props => (
+            props.location.pathname !== '/login' ? (<Nav />) : null
+          )}
         />
         <main>
           <Route
@@ -69,11 +70,13 @@ class App extends Component {
           <Route
             path="/curated/:listId"
             render={(props) => {
-              if (props.staticContext && props.staticContext.data && props.staticContext.data.beerList) {
+              if (props.staticContext
+                    && props.staticContext.data
+                    && props.staticContext.data.beerList) {
                 // during SSR, pass in curated list data directly
-                return (<BeerListContainer list={props.staticContext.data.beerList} {...props}/>);
+                return (<BeerListContainer list={props.staticContext.data.beerList} {...props} />);
               }
-              return (<BeerListContainer {...props}/>);
+              return (<BeerListContainer {...props} />);
             }}
           />
           <Route exact path="/brewery-search" component={BrewerySearch} />
@@ -84,5 +87,14 @@ class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  userIsLoggedIn: PropTypes.bool,
+};
+
+App.defaultProps = {
+  userIsLoggedIn: false,
+};
+
 
 export default App;

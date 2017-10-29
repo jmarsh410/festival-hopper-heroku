@@ -13,6 +13,9 @@ import Modal from './modal';
 import Notification from './notification';
 import Search from './search';
 import Select from './select';
+import AppBar from './app-bar';
+import CheckInButton from './checkin-button';
+import BackButton from './back-button';
 
 // storage for 
 const apiCallInfo = {
@@ -334,19 +337,19 @@ class BeerListContainer extends Component {
     });
   }
   getFavoriteItems() {
-    return _.filter(this.getFilteredItems(), (item) => {
-      return item.isFavorite === true;
-    });
+    return _.filter(this.getFilteredItems(), item => (
+      item.isFavorite === true
+    ));
   }
   getFilteredItems() {
-    var self = this;
+    const self = this;
     // filter the list based on current 'search' and 'sort' fields
     let beers = _.flatten(this.state.list.beers);
     // filter by search terms
     if (_.isString(this.state.searchField) && this.state.searchField.length > 0) {
-      beers = beers.filter((beer) => {
-        return beer.name.toLowerCase().replace(' ', '').includes(self.state.searchField) ? true : false;
-      });
+      beers = beers.filter(beer => (
+        beer.name.toLowerCase().replace(' ', '').includes(self.state.searchField)
+      ));
     }
     // filter by sort term
     if (_.isString(this.state.sortField) && this.state.sortField.length > 0) {
@@ -377,7 +380,10 @@ class BeerListContainer extends Component {
     let button = null;
     if (this.state.list.checkCount > 0) {
       button = (
-        <button className="btn btn-checkIn" onClick={this.handleCheckInClick}>Check In: {this.state.list.checkCount}</button>
+        <CheckInButton
+          handleClick={this.handleCheckInClick}
+          count={this.state.list.checkCount}
+        />
       );
     }
     // waiting for beer check-ins to respond, show modal with loading spinner
@@ -385,14 +391,14 @@ class BeerListContainer extends Component {
     if (_.isBoolean(this.state.waiting) && this.state.waiting) {
       waiting = (
         <Modal>
-          <LoadingSpinner/>
+          <LoadingSpinner />
         </Modal>
       );
     }
     // waiting to load more beers, show loading spinner
     let loadingSpinner = null;
     if (this.state.isLoading) {
-      loadingSpinner = (<LoadingSpinner/>);
+      loadingSpinner = (<LoadingSpinner />);
     }
     // if there are notifications, show them in a modal
     let modal = null;
@@ -409,17 +415,41 @@ class BeerListContainer extends Component {
         <LoadingSpinner />
       );
     }
+
+    // TODO: add controls
+    // show favorites, show checked, clear all checked beers, "quick find alphabet side bar"
+    // back button 
+
     // the favorites list
-    // <List title="Favorites" items={this.getFavoriteItems()} type={Beer} onChange={this.handleInputChange} />
+    // <List
+    //   title="Favorites"
+    //   items={this.getFavoriteItems()}
+    //   type={Beer}
+    //   onChange={this.handleInputChange}
+    // />
 
     return (
-      <div className="beers">
-        <h1>{this.state.list.name}</h1>
+      <div className="beers page">
+        <AppBar title={this.state.list.name} left={[BackButton]} />
         <BeerListControls>
-          <Search inputName="beer-search" placeholder="Search beer name..." handleSubmit={this.handleSearchSubmit} />
-          <Select id="beers-sort" label="Sort By:" options={Object.keys(sortTerms)} handleChange={this.handleSortChange} />
+          <Search
+            inputName="beer-search"
+            placeholder="Search beer..."
+            handleSubmit={this.handleSearchSubmit}
+          />
+          <Select
+            id="beers-sort"
+            label="Sort By:"
+            options={Object.keys(sortTerms)}
+            handleChange={this.handleSortChange}
+          />
         </BeerListControls>
-        <List title="" items={this.getFilteredItems()} type={Beer} onChange={this.handleInputChange} />
+        <List
+          title=""
+          items={this.getFilteredItems()}
+          type={Beer}
+          onChange={this.handleInputChange}
+        />
         {loadingSpinner}
         {button}
         {modal}

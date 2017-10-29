@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import List from './list';
 import Category from './category';
+import AppBar from './app-bar';
 import utils from '../utils/utils';
 
 // css
@@ -52,8 +53,9 @@ class Categories extends Component {
       );
     }
     return (
-      <div className="categories">
-        <List items={this.state.items} type={Category} title="Events" />
+      <div className="categories page">
+        <AppBar title="Events" />
+        <List items={this.state.items} type={Category} />
       </div>
     );
   }

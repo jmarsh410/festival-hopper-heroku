@@ -1,6 +1,8 @@
 /* jshint ignore:start */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+// import Beer from './beer'
 import _ from 'lodash';
 import '../styles/list.css';
 
@@ -12,7 +14,7 @@ class List extends Component {
     const html = deDupeItems.map((item, i) => {
       // if the item doesn't have an id property, then default to showing the array index
       const key = item.id ? item.id : i;
-      return <li key={key} data-order={i} className="list-item"><Type index={i} data={item}/></li>;
+      return <li key={key} data-order={i} className="list-item"><Type index={i} data={item} /></li>;
     });
     let title = null;
     // don't show title if there are no items in the list
@@ -29,5 +31,21 @@ class List extends Component {
     );
   }
 }
+
+List.propTypes = {
+  type: PropTypes.func.isRequired,
+  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  title: PropTypes.string,
+  onClick: PropTypes.func,
+  onChange: PropTypes.func,
+};
+
+List.defaultProps = {
+  type: null,
+  items: null,
+  title: null,
+  onClick: null,
+  onChange: null,
+};
 
 export default List;

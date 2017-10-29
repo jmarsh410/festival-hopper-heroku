@@ -4,6 +4,7 @@ import 'isomorphic-fetch';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import _ from 'lodash';
 import Beer from './beer';
 import BeerListControls from './beer-list-controls';
@@ -429,36 +430,57 @@ class BeerListContainer extends Component {
     // />
 
     return (
-      <div className="beers page">
-        <AppBar
-          title={this.state.list.name}
-          left={[<Link to="/curated">Back</Link>]}
-          right={[<Link to="/settings">Settings</Link>]}
-        />
-        <BeerListControls>
-          <Search
-            inputName="beer-search"
-            placeholder="Search beer..."
-            handleSubmit={this.handleSearchSubmit}
+      <ReactCSSTransitionGroup
+        transitionName={this.props.location
+                          && this.props.location.state
+                          && this.props.location.state.enterDirection
+                          ? this.props.location.state.enterDirection
+                          : 'fade'}
+        transitionAppear={true}
+        transitionAppearTimeout={500}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={300}
+      >
+        <div key={this.state.list.id} className="beers page">
+          <AppBar
+            title={this.state.list.name}
+            left={[
+              <Link
+                to={{
+                  pathname: '/curated',
+                  state: { enterDirection: 'right' },
+                }}
+              >
+                Back
+              </Link>
+            ]}
+            right={[<Link to="/settings">Settings</Link>]}
           />
-          <Select
-            id="beers-sort"
-            label="Sort By:"
-            options={Object.keys(sortTerms)}
-            handleChange={this.handleSortChange}
+          <BeerListControls>
+            <Search
+              inputName="beer-search"
+              placeholder="Search beer..."
+              handleSubmit={this.handleSearchSubmit}
+            />
+            <Select
+              id="beers-sort"
+              label="Sort By:"
+              options={Object.keys(sortTerms)}
+              handleChange={this.handleSortChange}
+            />
+          </BeerListControls>
+          <List
+            title=""
+            items={this.getFilteredItems()}
+            type={Beer}
+            onChange={this.handleInputChange}
           />
-        </BeerListControls>
-        <List
-          title=""
-          items={this.getFilteredItems()}
-          type={Beer}
-          onChange={this.handleInputChange}
-        />
-        {loadingSpinner}
-        {button}
-        {modal}
-        {waiting}
-      </div>
+          {loadingSpinner}
+          {button}
+          {modal}
+          {waiting}
+        </div>
+      </ReactCSSTransitionGroup>
     );
   }
 }

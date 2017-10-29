@@ -2,6 +2,7 @@
 
 import 'isomorphic-fetch';
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Beer from './beer';
@@ -15,7 +16,6 @@ import Search from './search';
 import Select from './select';
 import AppBar from './app-bar';
 import CheckInButton from './checkin-button';
-import BackButton from './back-button';
 
 // storage for 
 const apiCallInfo = {
@@ -88,73 +88,6 @@ class BeerListContainer extends Component {
       window.removeEventListener('scroll', this.handleScroll);
     }
   }
-  addNotification(error) {
-    this.setState((prevState) => {
-      prevState.notifications.push(error);
-      return { notifications: prevState.notifications };
-    });
-  }
-  clearNotifications() {
-    this.setState({
-      notifications: [],
-    });
-  }
-  handleScroll() {
-    // if this is the bottom of the page, then see if theres more items to be loaded
-    const bottomOfPage = window.innerHeight + window.pageYOffset === document.body.scrollHeight;
-    const moreItemsNeedLoaded = this.state.list.maxItems > this.state.list.beerCount;
-    if (bottomOfPage && moreItemsNeedLoaded) {
-      this.fetchBeersFromUntappd(true);
-    }
-  }
-  updateList(list) {
-    this.setState({
-      list,
-    });
-  }
-  updateStorage(list) {
-    // store beer list on localStorage
-    if (utils.isClientSide()) {
-      localStorage[this.listId] = JSON.stringify(list);
-    }
-  }
-  fetchBeersFromUntappd(add) {
-    const self = this;
-    // this.state.list.beers is an array of arrays
-    const bucketNum = add ? this.state.list.beers.length : 0;
-    const apiOffset = add ? bucketNum * this.defaultListSize : 0;
-    this.clearNotifications();
-    this.showLoadingSpinner();
-    fetch(this.apiEndpoint(this.listId, apiOffset))
-      .then((response) => {
-        if (response.status !== 200) {
-          self.addNotification({ id: utils.generateId(), text: `Error: Server responded with status code of ${response.status}`, type: 'error' });
-          return new Error(`The server responded with a status code of ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((json) => {
-        console.log(json);
-        if (add) {
-          const newBeers = this.normalizeData(json, bucketNum);
-          this.setState((prevState) => {
-            const newState = Object.assign({}, prevState);
-            newState.list.beers.push(newBeers);
-            newState.list.beerCount += newBeers.length;
-            return { list: newState.list };
-          });
-        } else {
-          const list = self.makeList(json, self.listId);
-          // set the state
-          self.updateList(list);
-        }
-        self.hideLoadingSpinner();
-      })
-      .catch((err) => {
-        self.addNotification({ id: utils.generateId(), text: err, type: 'error' });
-        console.error(err);
-      });
-  }
   getInitialBeers() {
     if (utils.isClientSide()) {
       // check localStorage for this list's beers
@@ -183,10 +116,93 @@ class BeerListContainer extends Component {
       }
     }
   }
-  handleModalClick() {
+  getFilteredItems() {
+    const self = this;
+    // filter the list based on current 'search' and 'sort' fields
+    let beers = _.flatten(this.state.list.beers);
+    // filter by search terms
+    if (_.isString(this.state.searchField) && this.state.searchField.length > 0) {
+      beers = beers.filter(beer => (
+        beer.name.toLowerCase().replace(' ', '').includes(self.state.searchField)
+      ));
+    }
+    // filter by sort term
+    if (_.isString(this.state.sortField) && this.state.sortField.length > 0) {
+      const term = sortTerms[this.state.sortField];
+      beers = _.sortBy(beers, [term]);
+    }
+    return beers;
+  }
+  getFavoriteItems() {
+    return _.filter(this.getFilteredItems(), item => (
+      item.isFavorite === true
+    ));
+  }
+  handleSearchSubmit(e) {
+    e.preventDefault();
+    // form element
+    const searchTerm = e.target.querySelector('.search-field').value.toLowerCase().replace(' ', '');
     this.setState({
-      notifications: [],
+      searchField: searchTerm,
     });
+  }
+  handleSortChange(e) {
+    const value = e.target.value;
+    this.setState({
+      sortField: value,
+    });
+  }
+  handleInputChange(e) {
+    const target = e.target;
+    // don't do anything if the beer has already been checkedIn
+    if (target.closest('.beer.checkedIn')) {
+      e.preventDefault();
+      return;
+    }
+    const row = target.closest('.beer');
+    const bucket = row.getAttribute('data-bucket');
+    const index = row.getAttribute('data-index');
+    // make it a favorite
+    if (target.closest('.beer-favorite')) {
+      this.setState((prevState) => {
+        prevState.list.beers[bucket][index].isFavorite = prevState.list.beers[bucket][index].isFavorite === true
+          ? false
+          : true;
+        return { list: prevState.list };
+      });
+    }
+    // check the beer
+    if (target.closest('.beer-checkbox')) {
+      this.setState((prevState) => {
+        if (target.checked === true) {
+          ++prevState.list.checkCount;
+        } else {
+          --prevState.list.checkCount;
+        }
+        prevState.list.beers[bucket][index].checked = target.checked;
+        return { list: prevState.list };
+      });
+    }
+    // open the drawer
+    if (target.closest('.beer-drawerToggle')) {
+      this.setState((prevState) => {
+        // reverse the openness property that is on the item 
+        prevState.list.beers[bucket][index].isOpen = prevState.list.beers[bucket][index].isOpen === true ? false : true;
+        return { list: prevState.list };
+      });
+    }
+    if (target.classList.contains('beer-description')) {
+      this.setState((prevState) => {
+        prevState.list.beers[bucket][index].description = target.value;
+        return { list: prevState.list };
+      });
+    }
+    if (target.classList.contains('beer-slider')) {
+      this.setState((prevState) => {
+        prevState.list.beers[bucket][index].rating = target.value;
+        return { list: prevState.list };
+      });
+    }
   }
   handleCheckInClick(e) {
     const self = this;
@@ -270,93 +286,77 @@ class BeerListContainer extends Component {
         });
     });
   }
-  handleInputChange(e) {
-    const target = e.target;
-    // don't do anything if the beer has already been checkedIn
-    if (target.closest('.beer.checkedIn')) {
-      e.preventDefault();
-      return;
-    }
-    const row = target.closest('.beer');
-    const bucket = row.getAttribute('data-bucket');
-    const index = row.getAttribute('data-index');
-    // make it a favorite
-    if (target.closest('.beer-favorite')) {
-      this.setState((prevState) => {
-        prevState.list.beers[bucket][index].isFavorite = prevState.list.beers[bucket][index].isFavorite === true
-          ? false
-          : true;
-        return { list: prevState.list };
-      });
-    }
-    // check the beer
-    if (target.closest('.beer-checkbox')) {
-      this.setState((prevState) => {
-        if (target.checked === true) {
-          ++prevState.list.checkCount;
-        } else {
-          --prevState.list.checkCount;
-        }
-        prevState.list.beers[bucket][index].checked = target.checked;
-        return { list: prevState.list };
-      });
-    }
-    // open the drawer
-    if (target.closest('.beer-drawerToggle')) {
-      this.setState((prevState) => {
-        // reverse the openness property that is on the item 
-        prevState.list.beers[bucket][index].isOpen = prevState.list.beers[bucket][index].isOpen === true ? false : true;
-        return { list: prevState.list };
-      });
-    }
-    if (target.classList.contains('beer-description')) {
-      this.setState((prevState) => {
-        prevState.list.beers[bucket][index].description = target.value;
-        return { list: prevState.list };
-      });
-    }
-    if (target.classList.contains('beer-slider')) {
-      this.setState((prevState) => {
-        prevState.list.beers[bucket][index].rating = target.value;
-        return { list: prevState.list };
-      });
-    }
-  }
-  handleSearchSubmit(e) {
-    e.preventDefault();
-    // form element
-    const searchTerm = e.target.querySelector('.search-field').value.toLowerCase().replace(' ', '');
+  handleModalClick() {
     this.setState({
-      searchField: searchTerm,
+      notifications: [],
     });
   }
-  handleSortChange(e) {
-    const value = e.target.value;
-    this.setState({
-      sortField: value,
-    });
-  }
-  getFavoriteItems() {
-    return _.filter(this.getFilteredItems(), item => (
-      item.isFavorite === true
-    ));
-  }
-  getFilteredItems() {
+  fetchBeersFromUntappd(add) {
     const self = this;
-    // filter the list based on current 'search' and 'sort' fields
-    let beers = _.flatten(this.state.list.beers);
-    // filter by search terms
-    if (_.isString(this.state.searchField) && this.state.searchField.length > 0) {
-      beers = beers.filter(beer => (
-        beer.name.toLowerCase().replace(' ', '').includes(self.state.searchField)
-      ));
+    // this.state.list.beers is an array of arrays
+    const bucketNum = add ? this.state.list.beers.length : 0;
+    const apiOffset = add ? bucketNum * this.defaultListSize : 0;
+    this.clearNotifications();
+    this.showLoadingSpinner();
+    fetch(this.apiEndpoint(this.listId, apiOffset))
+      .then((response) => {
+        if (response.status !== 200) {
+          self.addNotification({ id: utils.generateId(), text: `Error: Server responded with status code of ${response.status}`, type: 'error' });
+          return new Error(`The server responded with a status code of ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((json) => {
+        console.log(json);
+        if (add) {
+          const newBeers = this.normalizeData(json, bucketNum);
+          this.setState((prevState) => {
+            const newState = Object.assign({}, prevState);
+            newState.list.beers.push(newBeers);
+            newState.list.beerCount += newBeers.length;
+            return { list: newState.list };
+          });
+        } else {
+          const list = self.makeList(json, self.listId);
+          // set the state
+          self.updateList(list);
+        }
+        self.hideLoadingSpinner();
+      })
+      .catch((err) => {
+        self.addNotification({ id: utils.generateId(), text: err, type: 'error' });
+        console.error(err);
+      });
+  }
+  updateStorage(list) {
+    // store beer list on localStorage
+    if (utils.isClientSide()) {
+      localStorage[this.listId] = JSON.stringify(list);
     }
-    // filter by sort term
-    if (_.isString(this.state.sortField) && this.state.sortField.length > 0) {
-      const term = sortTerms[this.state.sortField];
-      beers = _.sortBy(beers, [term]);
+  }
+  updateList(list) {
+    this.setState({
+      list,
+    });
+  }
+  handleScroll() {
+    // if this is the bottom of the page, then see if theres more items to be loaded
+    const bottomOfPage = window.innerHeight + window.pageYOffset === document.body.scrollHeight;
+    const moreItemsNeedLoaded = this.state.list.maxItems > this.state.list.beerCount;
+    if (bottomOfPage && moreItemsNeedLoaded) {
+      this.fetchBeersFromUntappd(true);
     }
-    return beers;
+  }
+  clearNotifications() {
+    this.setState({
+      notifications: [],
+    });
+  }
+  addNotification(error) {
+    this.setState((prevState) => {
+      prevState.notifications.push(error);
+      return { notifications: prevState.notifications };
+    });
   }
   showModalSpinner() {
     this.setState({ waiting: true });
@@ -430,7 +430,11 @@ class BeerListContainer extends Component {
 
     return (
       <div className="beers page">
-        <AppBar title={this.state.list.name} left={[BackButton]} />
+        <AppBar
+          title={this.state.list.name}
+          left={[<Link to="/curated">Back</Link>]}
+          right={[<Link to="/settings">Settings</Link>]}
+        />
         <BeerListControls>
           <Search
             inputName="beer-search"

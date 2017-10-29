@@ -6,7 +6,7 @@ import Header from './header';
 import '../styles/login.css';
 import pbuLogo from '../images/pbu_40_black.png';
 
-const authURL = 'https://untappd.com/oauth/authenticate/?client_id=B37286DA6E41C3C75634F4C0DB726E889052525C&response_type=code&redirect_url=http://festivalhopper.jeredmarshall.com:5000';
+const authURL = 'https://untappd.com/oauth/authenticate/?client_id=B37286DA6E41C3C75634F4C0DB726E889052525C&response_type=code&redirect_url=https://festival-hopper.herokuapp.com';
 
 class Login extends Component {
   render() {

@@ -13,7 +13,7 @@ class AppBar extends Component {
         <div className="appBar-right">{this.props.right}</div>
       </div>
     );
-  }saf
+  }
 }
 
 AppBar.propTypes = {

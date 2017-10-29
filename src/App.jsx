@@ -11,6 +11,7 @@ import Categories from './components/categories';
 import BrewerySearch from './components/brewery-search';
 import BeerListContainer from './components/beer-list-container';
 import utils from './utils/utils';
+import './styles/page-transitions.css';
 
 class App extends Component {
   authenticate() {

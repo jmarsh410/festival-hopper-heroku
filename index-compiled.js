@@ -110,10 +110,12 @@ function handleRequest(req, res) {
     var promiseArray = [];
     // loop through the dataRoutes and build an array of
     // all data fetching promises that need to be fulfilled
-    _dataRoutes2.default.some(function (route) {
-      if (route.url === req.url) {
-        configKey = route.componentName;
-        promiseArray.push(route.data()); // pushes promise onto the promise array
+    _dataRoutes2.default.forEach(function (route) {
+      var matchObj = (0, _reactRouter.matchPath)(req.url, { path: route.url });
+      // console.log(matchObj);
+      if (matchObj && matchObj.isExact) {
+        configKey = route.propName;
+        promiseArray.push(route.data(matchObj)); // pushes promise onto the promise array
         return true;
       }
       return false;

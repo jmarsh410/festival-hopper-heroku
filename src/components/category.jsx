@@ -8,9 +8,13 @@ class Category extends Component {
   render(){
     const id = '/curated/' + this.props.data.id;
     return (
-      <Link to={{
-        pathname: id
-      }} className="category">
+      <Link
+        to={{
+          pathname: id,
+          state: { enterDirection: 'left' },
+        }}
+        className="category"
+      >
         <div className="category-image">
           <img src={this.props.data.image} alt={this.props.data.name}/>
         </div>

@@ -10,7 +10,9 @@ import Login from './components/login';
 import Categories from './components/categories';
 import BrewerySearch from './components/brewery-search';
 import BeerListContainer from './components/beer-list-container';
+import Settings from './components/settings';
 import utils from './utils/utils';
+import './styles/pages.css';
 import './styles/page-transitions.css';
 
 class App extends Component {
@@ -36,36 +38,38 @@ class App extends Component {
         <Route
           path="/"
           render={props => (
-            props.location.pathname !== '/login' ? (<Nav />) : null
+            props.location.pathname !== '/login' ? (<Nav {...props} />) : null
           )}
         />
         <main>
           <Route
             exact
             path="/"
-            render={() => (this.authenticate()
-              ? (<Redirect to="/curated" />)
-              : (<Redirect to="/login" />))}
+            render={props => (this.authenticate()
+              ? (<Redirect to="/curated" {...props} />)
+              : (<Redirect to="/login" {...props} />))}
           />
           <Route
             path="/logout"
-            render={() => {
+            render={(props) => {
               // delete the user's access token cookie
               if (utils.isClientSide()) {
                 utils.removeClientCookie('untappd_access_token');
               }
-              return (<Redirect to="/" />);
+              return (<Redirect to="/" {...props} />);
             }}
           />
           <Route
             exact
             path="/curated"
-            render={({ staticContext }) => {
-              if (staticContext && staticContext.data && staticContext.data.categories) {
+            render={(props) => {
+              if (props.staticContext
+                && props.staticContext.data
+                && props.staticContext.data.categories) {
                 // during SSR, pass in category data directly
-                return (<Categories items={staticContext.data.categories} />);
+                return (<Categories items={props.staticContext.data.categories} {...props} />);
               }
-              return (<Categories />);
+              return (<Categories {...props} />);
             }}
           />
           <Route
@@ -83,6 +87,7 @@ class App extends Component {
           <Route exact path="/brewery-search" component={BrewerySearch} />
           <Route path="/brewery/:listId" component={BeerListContainer} />
           <Route path="/login" component={Login} />
+          <Route path="/settings" component={Settings} />
         </main>
       </div>
     );

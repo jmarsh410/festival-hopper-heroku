@@ -11,7 +11,10 @@ class Category extends Component {
       <Link
         to={{
           pathname: id,
-          state: { enterDirection: 'left' },
+          state: {
+            enterDirection: 'left',
+            title: this.props.data.name,
+          },
         }}
         className="category"
       >

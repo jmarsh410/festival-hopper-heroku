@@ -50,18 +50,18 @@ class Categories extends Component {
   render() {
     return (
       <ReactCSSTransitionGroup
-        transitionName={this.props.location
-                          && this.props.location.state
-                          && this.props.location.state.enterDirection
-                          ? this.props.location.state.enterDirection
-                          : 'fade'}
+        transitionName={utils.getPageDirection(this.props)}
         transitionAppear={true}
         transitionAppearTimeout={500}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={300}
       >
         <div key="categories" className="categories page">
-          <AppBar title="Events" />
+          <AppBar
+            title="Events"
+            settings
+            currentPath={this.props.location.pathname}
+          />
           <AsyncList items={this.state.items} type={Category} />
         </div>
       </ReactCSSTransitionGroup>

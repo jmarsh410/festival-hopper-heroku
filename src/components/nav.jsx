@@ -25,7 +25,7 @@ class Nav extends Component {
               to="/curated"
               activeClassName="selected"
               className="nav-link nav-curated"
-            >Curated Lists</NavLink>
+            >Events</NavLink>
           </li>
           <li>
             <NavLink

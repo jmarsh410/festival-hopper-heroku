@@ -3,7 +3,7 @@
 }
 .left-appear.left-appear-active {
   transform: translate3d(0, 0, 0);
-  transition: transform .5s ease;
+  transition: transform 500s ease;
 }
 .left-leave {
   transform: translate3d(0%, 0, 0);
@@ -17,7 +17,7 @@
 }
 .right-appear.right-appear-active {
   transform: translate3d(0, 0, 0);
-  transition: transform .5s ease;
+  transition: transform 500s ease;
 }
 .right-leave {
   transform: translate3d(0%, 0, 0);
@@ -31,7 +31,7 @@
 }
 .fade-appear.fade-appear-active {
   opacity: 1;
-  transition: opacity .5s ease;
+  transition: opacity 500s ease;
 }
 .fade-leave {
   opacity: 1;

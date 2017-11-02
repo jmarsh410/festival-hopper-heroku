@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import AppBar from './app-bar';
 import utils from '../utils/utils';
+import '../styles/settings.css';
 
 class Settings extends Component {
   render() {
@@ -19,8 +20,8 @@ class Settings extends Component {
             title="Settings"
             backPath={utils.getBackPath(this.props)}
           />
-          <ul>
-            <li>
+          <ul className="settings-links">
+            <li className="settings-linkItem">
               <Link
                 to={{
                   pathname: '/logout',

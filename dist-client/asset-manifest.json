@@ -1,7 +1,6 @@
 {
-  "/media/pbu_40_black.png": "/media/458bbea78cc5bcb19cb3e7184c290db2.png",
+  "/media/hop-up.png": "/media/hop-up.png",
+  "/media/pbu_40_black.png": "/media/pbu_40_black.png",
   "main.css": "static/css/styles.css",
-  "main.css.map": "static/css/styles.css.map",
-  "main.js": "static/js/main.js",
-  "main.js.map": "static/js/main.js.map"
+  "main.js": "static/js/main.js"
 }

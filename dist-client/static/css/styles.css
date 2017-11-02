@@ -57,7 +57,7 @@ nav {
   padding: var(--container-full-width-padding);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 }
 .header a {
   text-decoration: none;
@@ -67,6 +67,14 @@ nav {
   font-size: var(--fs-m);
   font-family: var(--title-font-family);
   color: var(--dark);
+  text-transform: uppercase;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo-img {
+  width: 40px;
 }
 .header-logout {
   color: white;
@@ -113,14 +121,53 @@ nav {
   margin: 0 0 0px;
   padding: 0;
   border-bottom: 1px solid var(--gray);
-  // opacity:0;
-  // transition: opacity .3s ease attr(data-order);
+  /*counter-reset: list-items;*/
 }
+/* for testing, only show first 20 items */
+/*.list-item:nth-child(n + 20) {
+  display: none;
+}*/
 .list-item:last-child {
   border-bottom: none;
 }
 .list-item:last-child > * {
   margin-bottom: 0;
+}@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.loadingSpinner {
+  animation: 1s infinite spin;
+  background-color: transparent;
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 10px auto;
+  box-shadow: inset 0 0 0 4px var(--light-gray);
+}
+.loadingSpinner--centered {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+.loadingSpinner:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  border-left-color: var(--green);
 }.category {
   display: block;
   padding: 10px;
@@ -144,18 +191,30 @@ nav {
   margin-left: 10px;
 }.appBar {
   display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  min-height: 40px;
 }
 .appBar-left {
-  display: none;
+  fill: var(--white);
 }
 .appBar-title {
   font-family: var(--title-font-family);
   text-align: center;
   font-size: 1rem;
   flex: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
 .appBar-right {
-  display: none;
+  fill: var(--white);
+}.icon {
+  width: 20px;
+  height: 20px;
 }.categories-separator {
   text-align: center;
   margin: 20px 0;
@@ -208,42 +267,6 @@ nav {
   padding: 30px;
   box-sizing: border-box;
   overflow: scroll;
-}@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-.loadingSpinner {
-  animation: 1s infinite spin;
-  background-color: transparent;
-  position: relative;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin: 10px auto;
-  box-shadow: inset 0 0 0 4px var(--light-gray);
-}
-.loadingSpinner--centered {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-}
-.loadingSpinner:before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  border-radius: 50%;
-  border: 4px solid transparent;
-  border-left-color: var(--green);
 }.search {
   display: flex;
   position: relative;
@@ -454,25 +477,16 @@ nav {
   align-items: center;
   flex-wrap: wrap;
   margin: 0;
-  padding: 10px;
+  padding: 0 10px 10px;
   border-bottom: 1px solid var(--gray);
 }
-/*.beerListControls > * {
-  margin: 5px;
-}*/
 .beerListControls .search {
   flex: 1 1 51%;
   margin-bottom: 10px;
 }
 .beerListControls .select {
   flex: 1 1 51%;
-  display: none;
-}
-/*@media screen and (min-width:700px) {
-  .beerListControls .select {
-    padding-left: 20px;
-  }
-}*/.notification {
+}.notification {
   display: block;
   padding: 10px;
 }
@@ -483,6 +497,10 @@ nav {
   display: flex;
   align-items: center;
   box-sizing: border-box;
+  border: none;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 .select:after {
   content: '';
@@ -500,18 +518,25 @@ nav {
 }
 .select-label {
   margin-right: 10px;
+  display: none;
 }
 .select-select {
-  border-radius: 0;
-  background: white;
-  padding: 10px;
+  width: 100%;
+  padding: 10px 50px 10px 15px;
+  border-radius: 30px;
+  background: rgba(255,255,255,.25);
   border: none;
   box-shadow: none;
   min-width: 150px;
   -webkit-appearance: none;
   font-size: var(--fs-input);
   flex: 1;
-}.checkIn {
+  color: var(--medium);
+}
+.select-select::placeholder {
+  color: var(--medium);
+}
+.checkIn {
   position: fixed;
   bottom: 75px;
   right: 20px;
@@ -538,31 +563,58 @@ nav {
   color: var(--white);
   background: var(--negative);
   border-radius: 50%;
+}.settings-links {
+  list-style-type: none;
+  margin: 20px 0;
+  padding: 0;
+  text-align: center;
+}
+.settings-linkItem a {
+  color: var(--dark); 
+}.page {
+  padding: 0 5%;
+  padding-bottom: 80px;
 }.left-appear {
-  transform: translateX(100%);
+  transform: translate3d(100%, 0, 0);
 }
-
 .left-appear.left-appear-active {
-  transform: translateX(0);
-  transition: transform .5s ease-in;
+  transform: translate3d(0, 0, 0);
+  transition: transform 500s ease;
 }
-
+.left-leave {
+  transform: translate3d(0%, 0, 0);
+}
+.left-leave.left-leave-active {
+  transform: translate3d(100%, 0, 0);
+  transition: transform 300ms ease;
+}
 .right-appear {
-  transform: translateX(-100%);
+  transform: translate3d(-100%, 0, 0);
 }
-
 .right-appear.right-appear-active {
-  transform: translateX(0);
-  transition: transform .5s ease-in;
+  transform: translate3d(0, 0, 0);
+  transition: transform 500s ease;
 }
-
+.right-leave {
+  transform: translate3d(0%, 0, 0);
+}
+.right-leave.right-leave-active {
+  transform: translate3d(-100%, 0, 0);
+  transition: transform 300ms ease;
+}
 .fade-appear {
   opacity: 0.01;
 }
-
 .fade-appear.fade-appear-active {
   opacity: 1;
-  transition: opacity .5s ease-in;
+  transition: opacity 500s ease;
+}
+.fade-leave {
+  opacity: 1;
+}
+.fade-leave.fade-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease;
 }/*! normalize.css v5.0.0 | MIT License | github.com/necolas/normalize.css */
 
 /**
@@ -1093,12 +1145,6 @@ textarea {
   font-size: 16px;
 }
 
-/* LAYOUT */
-.page {
-  padding: 0 5%;
-  padding-bottom: 80px;
-}
-
 @media screen and (min-width: 700px) {
   main {
     max-width: 700px;
@@ -1107,4 +1153,4 @@ textarea {
     padding-right: 4%;
   }
 }
-/*# sourceMappingURL=styles.css.map*/
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzdGF0aWMvY3NzL3N0eWxlcy5jc3MiLCJzb3VyY2VSb290IjoiIn0=*/

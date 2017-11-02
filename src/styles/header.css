@@ -3,7 +3,7 @@
   padding: var(--container-full-width-padding);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 }
 .header a {
   text-decoration: none;
@@ -13,6 +13,14 @@
   font-size: var(--fs-m);
   font-family: var(--title-font-family);
   color: var(--dark);
+  text-transform: uppercase;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo-img {
+  width: 40px;
 }
 .header-logout {
   color: white;

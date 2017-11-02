@@ -8,10 +8,10 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 
 module.exports = {
   watch: true,
+  entry: './src/index.jsx', // TODO: see if you want to add polyfills to the bundle
   // We generate sourcemaps in production. This is slow but gives good results.
   // You can exclude the *.map files from the build during deployment.
-  devtool: 'source-map',
-  entry: './src/index.jsx', // TODO: see if you want to add polyfills to the bundle
+  devtool: 'inline-source-map',
   output: {
     // put the files in the dist-client folder
     path: path.resolve(__dirname, 'dist-client'),
@@ -32,7 +32,8 @@ module.exports = {
         use: {
           loader: 'file-loader',
           options: {
-            name: '/media/[hash].[ext]',
+            name: '[name].[ext]',
+            outputPath: '/media/',
           },
         },
       },

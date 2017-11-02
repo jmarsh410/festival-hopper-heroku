@@ -13,9 +13,12 @@
   margin: 0 0 0px;
   padding: 0;
   border-bottom: 1px solid var(--gray);
-  // opacity:0;
-  // transition: opacity .3s ease attr(data-order);
+  /*counter-reset: list-items;*/
 }
+/* for testing, only show first 20 items */
+/*.list-item:nth-child(n + 20) {
+  display: none;
+}*/
 .list-item:last-child {
   border-bottom: none;
 }

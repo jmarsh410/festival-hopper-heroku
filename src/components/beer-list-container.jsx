@@ -2,12 +2,12 @@
 
 import 'isomorphic-fetch';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import _ from 'lodash';
 import Beer from './beer';
 import BeerListControls from './beer-list-controls';
+import AsyncList from './async-list';
 import List from './list';
 import utils from '../utils/utils';
 import LoadingSpinner from './loading-spinner';
@@ -30,6 +30,8 @@ const apiCallInfo = {
 const sortTerms = {
   'Brewery Name A-Z': 'brewery',
   'Beer Name A-Z': 'name',
+  Favorites: 'isFavorite',
+  'Checked Beers': 'checked',
 };
 
 class BeerListContainer extends Component {
@@ -131,6 +133,9 @@ class BeerListContainer extends Component {
     if (_.isString(this.state.sortField) && this.state.sortField.length > 0) {
       const term = sortTerms[this.state.sortField];
       beers = _.sortBy(beers, [term]);
+      if (term === 'isFavorite' || term === 'checked') {
+        beers.reverse();
+      }
     }
     return beers;
   }
@@ -372,15 +377,14 @@ class BeerListContainer extends Component {
     this.setState({ isLoading: false });
   }
   render() {
-    // const self = this;
     // update the beer list on localStorage each time the state changes
     if (this.state.list.beers !== null) {
       this.updateStorage(this.state.list);
     }
     // show the 'check-in' button if some of the beers are checkec
-    let button = null;
+    let checkInButton = null;
     if (this.state.list.checkCount > 0) {
-      button = (
+      checkInButton = (
         <CheckInButton
           handleClick={this.handleCheckInClick}
           count={this.state.list.checkCount}
@@ -397,64 +401,37 @@ class BeerListContainer extends Component {
       );
     }
     // waiting to load more beers, show loading spinner
-    let loadingSpinner = null;
+    let loadingMoreBeers = null;
     if (this.state.isLoading) {
-      loadingSpinner = (<LoadingSpinner />);
+      loadingMoreBeers = (<LoadingSpinner />);
     }
     // if there are notifications, show them in a modal
-    let modal = null;
+    let notifications = null;
     if (_.isArray(this.state.notifications) && !_.isEmpty(this.state.notifications)) {
-      modal = (
+      notifications = (
         <Modal onCloseClick={this.handleModalClick} close={true}>
           <List type={Notification} items={this.state.notifications} />
         </Modal>
       );
     }
-    // waiting for beer list to generate, show loading spinner
-    if (!_.isArray(this.state.list.beers)) {
-      return (
-        <LoadingSpinner />
-      );
-    }
 
     // TODO: add controls
     // show favorites, show checked, clear all checked beers, "quick find alphabet side bar"
-    // back button 
-
-    // the favorites list
-    // <List
-    //   title="Favorites"
-    //   items={this.getFavoriteItems()}
-    //   type={Beer}
-    //   onChange={this.handleInputChange}
-    // />
 
     return (
       <ReactCSSTransitionGroup
-        transitionName={this.props.location
-                          && this.props.location.state
-                          && this.props.location.state.enterDirection
-                          ? this.props.location.state.enterDirection
-                          : 'fade'}
+        transitionName={utils.getPageDirection(this.props)}
         transitionAppear={true}
         transitionAppearTimeout={500}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={300}
       >
-        <div key={this.state.list.id} className="beers page">
+        <div key={utils.generateId()} className="beers page">
           <AppBar
+            backPath="/curated"
             title={this.state.list.name}
-            left={[
-              <Link
-                to={{
-                  pathname: '/curated',
-                  state: { enterDirection: 'right' },
-                }}
-              >
-                Back
-              </Link>
-            ]}
-            right={[<Link to="/settings">Settings</Link>]}
+            settings
+            currentPath={this.props.location.pathname}
           />
           <BeerListControls>
             <Search
@@ -469,15 +446,14 @@ class BeerListContainer extends Component {
               handleChange={this.handleSortChange}
             />
           </BeerListControls>
-          <List
-            title=""
+          <AsyncList
             items={this.getFilteredItems()}
             type={Beer}
             onChange={this.handleInputChange}
           />
-          {loadingSpinner}
-          {button}
-          {modal}
+          {loadingMoreBeers}
+          {checkInButton}
+          {notifications}
           {waiting}
         </div>
       </ReactCSSTransitionGroup>

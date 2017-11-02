@@ -25,7 +25,9 @@ module.exports = {
         use: {
           loader: 'file-loader',
           options: {
-            name: '/media/[hash].[ext]',
+            name: '[name].[ext]',
+            publicPath: 'media/',
+            emitFile: false,
           },
         },
       },

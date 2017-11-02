@@ -8,12 +8,8 @@
   <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-  <div id="root">
-    {{ content }}
-  </div>
-  <script>
-    window.appData = {{ appData }};
-  </script>
+  <div id="root">{{ content }}</div>
+  <script>window.appData = {{ appData }};</script>
   <script type="text/javascript" src="/js/main.js"></script>
 </body>
 </html>

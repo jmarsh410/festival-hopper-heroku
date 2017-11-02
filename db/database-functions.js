@@ -41,7 +41,6 @@ function getCuratedBeerList(listId) {
         if (findErr) {
           return reject(findErr);
         }
-        console.log(result);
         return resolve(result);
       });
     });

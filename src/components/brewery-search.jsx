@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react';
 import _ from 'lodash';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import List from './list';
 import Brewery from './brewery';
 import Modal from './modal';
@@ -80,16 +81,28 @@ class BrewerySearch extends Component {
       );
     }
     return (
-      <div className="brewerySearch page">
-        <AppBar title="Brewery Search" />
-        <Search
-          handleSubmit={this.handleSubmit}
-          inputName="brewery-name"
-          placeholder="Search Breweries..."
-        />
-        { modalSpinner }
-        { breweries }
-      </div>
+      <ReactCSSTransitionGroup
+        transitionName={utils.getPageDirection(this.props)}
+        transitionAppear={true}
+        transitionAppearTimeout={500}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={300}
+      >
+        <div className="brewerySearch page">
+          <AppBar
+            title="Brewery Search"
+            settings
+            currentPath={this.props.location.pathname}
+          />
+          <Search
+            handleSubmit={this.handleSubmit}
+            inputName="brewery-name"
+            placeholder="Search Breweries..."
+          />
+          { modalSpinner }
+          { breweries }
+        </div>
+      </ReactCSSTransitionGroup>
     );
   }
 }

@@ -1,15 +1,24 @@
 .appBar {
   display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  min-height: 40px;
 }
 .appBar-left {
-  display: none;
+  fill: var(--white);
 }
 .appBar-title {
   font-family: var(--title-font-family);
   text-align: center;
   font-size: 1rem;
   flex: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
 .appBar-right {
-  display: none;
+  fill: var(--white);
 }

@@ -90,11 +90,27 @@ const utils = {
     });
     return breweries;
   },
-  removeClientCookie(name) {
+  removeClientCookie() {
     Cookie.remove('untappd_access_token');
   },
   isClientSide() {
     return typeof window !== 'undefined';
+  },
+  getPageDirection(props) {
+    return props
+      && props.location
+      && props.location.state
+      && props.location.state.enterDirection
+      ? props.location.state.enterDirection
+      : 'fade';
+  },
+  getBackPath(props) {
+    return props
+      && props.location
+      && props.location.state
+      && props.location.state.from
+      ? props.location.state.from
+      : '';
   },
 };
 

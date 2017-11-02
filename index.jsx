@@ -82,7 +82,6 @@ function handleRequest(req, res) {
     // all data fetching promises that need to be fulfilled
     dataRoutes.forEach((route) => {
       const matchObj = matchPath(req.url, { path: route.url });
-      // console.log(matchObj);
       if (matchObj && matchObj.isExact) {
         configKey = route.propName;
         promiseArray.push(route.data(matchObj)); // pushes promise onto the promise array

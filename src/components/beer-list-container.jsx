@@ -30,7 +30,7 @@ const apiCallInfo = {
 const sortTerms = {
   'Brewery Name A-Z': 'brewery',
   'Beer Name A-Z': 'name',
-  'Favorites': 'isFavorite',
+  Favorites: 'isFavorite',
   'Checked Beers': 'checked',
 };
 
@@ -133,6 +133,9 @@ class BeerListContainer extends Component {
     if (_.isString(this.state.sortField) && this.state.sortField.length > 0) {
       const term = sortTerms[this.state.sortField];
       beers = _.sortBy(beers, [term]);
+      if (term === 'isFavorite' || term === 'checked') {
+        beers.reverse();
+      }
     }
     return beers;
   }

@@ -928,9 +928,9 @@ var _utils = __webpack_require__(4);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-__webpack_require__(53);
-
 __webpack_require__(54);
+
+__webpack_require__(55);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1195,7 +1195,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* jshint ignore:start */
 
-var authURL = 'https://untappd.com/oauth/authenticate/?client_id=B37286DA6E41C3C75634F4C0DB726E889052525C&response_type=code&redirect_url=http://festivalhopper.jeredmarshall.com:5000';
+var authURL = 'https://untappd.com/oauth/authenticate/?client_id=B37286DA6E41C3C75634F4C0DB726E889052525C&response_type=code&redirect_url=https://festival-hopper.herokuapp.com';
 
 var Login = function (_Component) {
   _inherits(Login, _Component);
@@ -3153,7 +3153,7 @@ var _utils = __webpack_require__(4);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-__webpack_require__(56);
+__webpack_require__(53);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3230,7 +3230,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, ".page {\n  padding: 0 5%;\n  padding-bottom: 80px;\n}", ""]);
+exports.push([module.i, ".settings-links {\n  list-style-type: none;\n  margin: 20px 0;\n  padding: 0;\n  text-align: center;\n}\n.settings-linkItem a {\n  color: var(--dark); \n}", ""]);
 
 // exports
 
@@ -3244,14 +3244,13 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, ".left-appear {\n  transform: translate3d(100%, 0, 0);\n}\n.left-appear.left-appear-active {\n  transform: translate3d(0, 0, 0);\n  transition: transform 500s ease;\n}\n.left-leave {\n  transform: translate3d(0%, 0, 0);\n}\n.left-leave.left-leave-active {\n  transform: translate3d(100%, 0, 0);\n  transition: transform 300ms ease;\n}\n.right-appear {\n  transform: translate3d(-100%, 0, 0);\n}\n.right-appear.right-appear-active {\n  transform: translate3d(0, 0, 0);\n  transition: transform 500s ease;\n}\n.right-leave {\n  transform: translate3d(0%, 0, 0);\n}\n.right-leave.right-leave-active {\n  transform: translate3d(-100%, 0, 0);\n  transition: transform 300ms ease;\n}\n.fade-appear {\n  opacity: 0.01;\n}\n.fade-appear.fade-appear-active {\n  opacity: 1;\n  transition: opacity 500s ease;\n}\n.fade-leave {\n  opacity: 1;\n}\n.fade-leave.fade-leave-active {\n  opacity: 0.01;\n  transition: opacity 300ms ease;\n}", ""]);
+exports.push([module.i, ".page {\n  padding: 0 5%;\n  padding-bottom: 80px;\n}", ""]);
 
 // exports
 
 
 /***/ }),
-/* 55 */,
-/* 56 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -3259,7 +3258,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, ".settings-links {\n  list-style-type: none;\n  margin: 20px 0;\n  padding: 0;\n  text-align: center;\n}\n.settings-linkItem a {\n  color: var(--dark); \n}", ""]);
+exports.push([module.i, ".left-appear {\n  transform: translate3d(100%, 0, 0);\n}\n.left-appear.left-appear-active {\n  transform: translate3d(0, 0, 0);\n  transition: transform 500s ease;\n}\n.left-leave {\n  transform: translate3d(0%, 0, 0);\n}\n.left-leave.left-leave-active {\n  transform: translate3d(100%, 0, 0);\n  transition: transform 300ms ease;\n}\n.right-appear {\n  transform: translate3d(-100%, 0, 0);\n}\n.right-appear.right-appear-active {\n  transform: translate3d(0, 0, 0);\n  transition: transform 500s ease;\n}\n.right-leave {\n  transform: translate3d(0%, 0, 0);\n}\n.right-leave.right-leave-active {\n  transform: translate3d(-100%, 0, 0);\n  transition: transform 300ms ease;\n}\n.fade-appear {\n  opacity: 0.01;\n}\n.fade-appear.fade-appear-active {\n  opacity: 1;\n  transition: opacity 500s ease;\n}\n.fade-leave {\n  opacity: 1;\n}\n.fade-leave.fade-leave-active {\n  opacity: 0.01;\n  transition: opacity 300ms ease;\n}", ""]);
 
 // exports
 

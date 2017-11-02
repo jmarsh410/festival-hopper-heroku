@@ -112,7 +112,6 @@ function handleRequest(req, res) {
     // all data fetching promises that need to be fulfilled
     _dataRoutes2.default.forEach(function (route) {
       var matchObj = (0, _reactRouter.matchPath)(req.url, { path: route.url });
-      // console.log(matchObj);
       if (matchObj && matchObj.isExact) {
         configKey = route.propName;
         promiseArray.push(route.data(matchObj)); // pushes promise onto the promise array

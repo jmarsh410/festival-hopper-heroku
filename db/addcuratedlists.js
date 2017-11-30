@@ -1,3 +1,5 @@
+// node addcuratedlists.js [file name in _curated-lists]
+
 var fs = require('fs');
 var path = require('path');
 var MongoClient = require('mongodb').MongoClient;
